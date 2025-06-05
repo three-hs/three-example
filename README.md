@@ -22,4 +22,6 @@ make serve
 
 - https://r3f.docs.pmnd.rs/getting-started/introduction
 - https://threejs.org/manual/#en/installation
+- https://threejs.org/docs/
+- https://github.com/mrdoob/three.js
 

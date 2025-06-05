@@ -3,6 +3,8 @@ import * as THREE from 'three';
 
 const width = window.innerWidth, height = window.innerHeight;
 
+// init
+
 const camera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
 camera.position.z = 1;
 
@@ -19,10 +21,12 @@ renderer.setSize( width, height );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
-function animate() {
+// animation
 
-	mesh.rotation.x += 0.01;
-	mesh.rotation.y += 0.01;
+function animate( time ) {
+
+	mesh.rotation.x = time / 2000;
+	mesh.rotation.y = time / 1000;
 
 	renderer.render( scene, camera );
 
