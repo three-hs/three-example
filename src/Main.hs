@@ -86,7 +86,7 @@ viewModel _ =
             ]
             []
         , canvas_
-            [ id_ "canvas"
+            [ id_ "mycanvas"
             , width_ "400"
             , height_ "300"
             ]
