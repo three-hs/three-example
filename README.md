@@ -24,4 +24,5 @@ make serve
 - https://threejs.org/manual/#en/installation
 - https://threejs.org/docs/
 - https://github.com/mrdoob/three.js
+- https://github.com/fireship-io/threejs-scroll-animation-demo/blob/main/main.js
 
