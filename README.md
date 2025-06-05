@@ -1,0 +1,25 @@
+# miso-three-test
+
+Sample web app for testing [threejs](https://threejs.org/), in Haskell, using [Miso](https://haskell-miso.org/).
+
+
+## Try online
+
+- [https://juliendehos.github.io/miso-three-test/](https://juliendehos.github.io/miso-three-test/)
+
+
+## Build and run
+
+Install [Nix Flakes](https://nixos.wiki/wiki/Flakes), then:
+
+```
+nix develop
+make
+make serve
+```
+
+## Reference
+
+- https://r3f.docs.pmnd.rs/getting-started/introduction
+- https://threejs.org/manual/#en/installation
+
