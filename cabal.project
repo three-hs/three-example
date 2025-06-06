@@ -6,10 +6,14 @@ allow-newer:
 
 source-repository-package
   type: git
-  -- location: https://github.com/juliendehos/miso
-  -- tag: db9e55e
   location: https://github.com/dmjio/miso
   branch: master
+
+source-repository-package
+  type: git
+  location: https://github.com/juliendehos/three
+  tag: 0ac95ec328f2c9981c186daf8c1f93c3274c6db9
+  -- branch: master
 
 flags: +template-haskell
 
