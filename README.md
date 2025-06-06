@@ -7,7 +7,7 @@ Sample web app for testing [threejs](https://threejs.org/), in Haskell, using [M
 
 ## Try online
 
-- [https://juliendehos.github.io/miso-three-test/](https://juliendehos.github.io/miso-three-test/)
+- TODO [https://juliendehos.github.io/miso-three-test/](https://juliendehos.github.io/miso-three-test/)
 
 
 ## Build and run
