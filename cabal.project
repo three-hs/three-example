@@ -12,7 +12,7 @@ source-repository-package
 source-repository-package
   type: git
   location: https://github.com/juliendehos/three
-  tag: 8f06173
+  tag: 388e846
   -- branch: master
 
 flags: +template-haskell

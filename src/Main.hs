@@ -13,7 +13,9 @@ import THREE.Light
 
 -- materials
 import THREE.MeshNormalMaterial
+import THREE.MeshPhysicalMaterial
 import THREE.Material
+
 
 testLights :: JSM ()
 testLights = do
@@ -29,25 +31,34 @@ testLights = do
   valToStr (unAmbientLight pointLight1) >>= consoleLog
   intensity pointLight1 >>= consoleLog . ms
 
+myFunc :: MeshPhysicalMaterial -> JSM (Double, Double) 
+myFunc (MeshPhysicalMaterial v) = do
+  x <- v ! ("iridescenceThicknessRange" :: JSString) 
+  y0 <- fromJSValUnchecked =<< (x # ("at" :: JSString) $ (0::Int)) 
+  y1 <- fromJSValUnchecked =<< (x # ("at" :: JSString) $ (1::Int)) 
+  pure (y0, y1)
+
 testMaterials :: JSM ()
 testMaterials = do
   meshNormalMaterial1 <- THREE.MeshNormalMaterial.new
   blending meshNormalMaterial1 >>= consoleLog . ms . fromEnum
   blending meshNormalMaterial1 >>= consoleLog . ms . show
 
-  -- TODO MeshPhysicalMaterial.iridescenceThicknessRange
+  meshPhysicalMaterial1 <- THREE.MeshPhysicalMaterial.new
+  consoleLog "toto"
+  myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
+  -- iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
 
-app :: JSM ()
-app = do
+
+main :: IO ()
+main = run $ do
   consoleLog "begin"
   testLights
   testMaterials
   consoleLog "end"
 
+
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
 #endif
-
-main :: IO ()
-main = run app
 
