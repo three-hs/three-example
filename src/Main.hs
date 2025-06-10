@@ -15,7 +15,6 @@ import THREE.Light
 import THREE.MeshNormalMaterial
 import THREE.Material
 
-
 testLights :: JSM ()
 testLights = do
   ambientLight1 <- THREE.AmbientLight.new 0 0.01
@@ -35,6 +34,8 @@ testMaterials = do
   meshNormalMaterial1 <- THREE.MeshNormalMaterial.new
   blending meshNormalMaterial1 >>= consoleLog . ms . fromEnum
   blending meshNormalMaterial1 >>= consoleLog . ms . show
+
+  -- TODO MeshPhysicalMaterial.iridescenceThicknessRange
 
 app :: JSM ()
 app = do
