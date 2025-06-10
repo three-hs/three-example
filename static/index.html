@@ -3,16 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title> miso-three-test </title>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@v0.177.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.177.0/examples/jsm/"
+      }
+    }
+    </script>
+
   </head>
 
   <body>
 
     <!--
       TODO use a more recent version of three.js
-    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+    -->
 
-    <script src="index.js" type="module"></script>
+    <script type="module">
+      console.log("foobar");
+      import * as THREE from 'three';
+      const x = new THREE.MeshPhysicalMaterial();
+      console.log(x.iridescenceThicknessRange);
+   </script>
+
+    <script src="/index.js" type="module"></script>
+
 
   </body>
 </html>

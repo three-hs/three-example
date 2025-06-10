@@ -46,7 +46,7 @@ testMaterials = do
 
   meshPhysicalMaterial1 <- THREE.MeshPhysicalMaterial.new
   consoleLog "toto"
-  myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
+  -- myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
   -- iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
 
 
