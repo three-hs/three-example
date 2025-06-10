@@ -7,8 +7,13 @@ import Language.Javascript.JSaddle as JS
 import Miso 
 import Miso.String (ms)
 
+-- lights
 import THREE.AmbientLight
 import THREE.Light
+
+-- materials
+import THREE.MeshNormalMaterial
+import THREE.Material
 
 
 testLights :: JSM ()
@@ -25,10 +30,17 @@ testLights = do
   valToStr (unAmbientLight pointLight1) >>= consoleLog
   intensity pointLight1 >>= consoleLog . ms
 
+testMaterials :: JSM ()
+testMaterials = do
+  meshNormalMaterial1 <- THREE.MeshNormalMaterial.new
+  blending meshNormalMaterial1 >>= consoleLog . ms . fromEnum
+  blending meshNormalMaterial1 >>= consoleLog . ms . show
+
 app :: JSM ()
 app = do
   consoleLog "begin"
   testLights
+  testMaterials
   consoleLog "end"
 
 #ifdef WASM
