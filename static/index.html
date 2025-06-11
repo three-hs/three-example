@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <title> miso-three-test </title>
 
+    <!--
+    recent version of three.js (doesn't work)
+    -->
     <script type="importmap">
     {
       "imports": {
@@ -18,18 +21,11 @@
   <body>
 
     <!--
-      TODO use a more recent version of three.js
+    old version of three.js (works)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
     -->
 
-    <script type="module">
-      console.log("foobar");
-      import * as THREE from 'three';
-      const x = new THREE.MeshPhysicalMaterial();
-      console.log(x.iridescenceThicknessRange);
-   </script>
-
-    <script src="/index.js" type="module"></script>
+    <script src="index.js" type="module"></script>
 
 
   </body>

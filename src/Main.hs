@@ -45,8 +45,7 @@ testMaterials = do
   blending meshNormalMaterial1 >>= consoleLog . ms . show
 
   meshPhysicalMaterial1 <- THREE.MeshPhysicalMaterial.new
-  consoleLog "toto"
-  -- myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
+  myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
   -- iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
 
 
