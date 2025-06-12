@@ -5,8 +5,6 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE CPP #-}
 
-module Main where
-
 import           Control.Monad
 import           Control.Monad.IO.Class (liftIO)
 import           Data.IORef

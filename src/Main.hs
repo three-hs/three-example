@@ -31,12 +31,6 @@ testLights = do
   valToStr (unAmbientLight pointLight1) >>= consoleLog
   intensity pointLight1 >>= consoleLog . ms
 
-myFunc :: MeshPhysicalMaterial -> JSM (Double, Double) 
-myFunc (MeshPhysicalMaterial v) = do
-  x <- v ! ("iridescenceThicknessRange" :: JSString) 
-  y0 <- fromJSValUnchecked =<< (x # ("at" :: JSString) $ (0::Int)) 
-  y1 <- fromJSValUnchecked =<< (x # ("at" :: JSString) $ (1::Int)) 
-  pure (y0, y1)
 
 testMaterials :: JSM ()
 testMaterials = do
@@ -45,8 +39,7 @@ testMaterials = do
   blending meshNormalMaterial1 >>= consoleLog . ms . show
 
   meshPhysicalMaterial1 <- THREE.MeshPhysicalMaterial.new
-  myFunc meshPhysicalMaterial1 >>= consoleLog . ms . show
-  -- iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
+  iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
 
 
 main :: IO ()
