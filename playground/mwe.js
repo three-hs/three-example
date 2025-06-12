@@ -9,8 +9,8 @@ const scene = new THREE.Scene();
 // mesh
 const geo1 = new THREE.SphereGeometry();
 const mat1 = new THREE.MeshLambertMaterial();
-const mesh0 = new THREE.Mesh(geo1, mat1);
-scene.add( mesh0 );
+const mesh1 = new THREE.Mesh(geo1, mat1);
+scene.add( mesh1 );
 
 // light
 const pointLight = new THREE.PointLight();
