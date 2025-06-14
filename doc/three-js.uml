@@ -1,0 +1,908 @@
+
+@startuml
+
+left to right direction
+
+
+class LightProbe 
+class IESSpotLight 
+class ProjectorLight 
+class PointLightShadow 
+class LightShadow 
+class PointLight 
+class HemisphereLight 
+class SpotLightShadow 
+class DirectionalLight 
+class DirectionalLightShadow 
+class RectAreaLight 
+class SpotLight 
+class AmbientLight 
+class Light 
+class CubeTexture 
+class CompressedArrayTexture 
+class CompressedCubeTexture 
+class Texture 
+class DataTexture 
+class Source 
+class VideoTexture 
+class FramebufferTexture 
+class CanvasTexture 
+class VideoFrameTexture 
+class DataArrayTexture 
+class DepthTexture 
+class Data3DTexture 
+class CompressedTexture 
+class Box3Helper 
+class AxesHelper 
+class PlaneHelper 
+class SkeletonHelper 
+class PolarGridHelper 
+class HemisphereLightHelper 
+class CameraHelper 
+class BoxHelper 
+class GridHelper 
+class SpotLightHelper 
+class ArrowHelper 
+class PointLightHelper 
+class DirectionalLightHelper 
+class TorusKnotGeometry 
+class BoxGeometry 
+class ExtrudeGeometry 
+class LatheGeometry 
+class OctahedronGeometry 
+class ConeGeometry 
+class TorusGeometry 
+class CapsuleGeometry 
+class EdgesGeometry 
+class PlaneGeometry 
+class WireframeGeometry 
+class TubeGeometry 
+class SphereGeometry 
+class RingGeometry 
+class DodecahedronGeometry 
+class TetrahedronGeometry 
+class IcosahedronGeometry 
+class CircleGeometry 
+class ShapeGeometry 
+class CylinderGeometry 
+class PolyhedronGeometry 
+class Cylindrical 
+class Interpolant 
+class Vector3 
+class Vector4 
+class Euler 
+class Matrix4 
+class Line3 
+class SphericalHarmonics3 
+class Vector2 
+class Color 
+class Triangle 
+class Plane 
+class Spherical 
+class Box3 
+class Ray 
+class Matrix3 
+class Frustum 
+class Sphere 
+class Quaternion 
+class Box2 
+class DiscreteInterpolant 
+class LinearInterpolant 
+class CubicInterpolant 
+class QuaternionLinearInterpolant 
+class FrustumArray 
+class LineSegments 
+class Line 
+class Mesh 
+class ClippingGroup 
+class MultiDrawRenderList 
+class BatchedMesh 
+class Bone 
+class Points 
+class Sprite 
+class LineLoop 
+class SkinnedMesh 
+class InstancedMesh 
+class LOD 
+class Group 
+class Skeleton 
+class StereoCamera 
+class CubeCamera 
+class OrthographicCamera 
+class ArrayCamera 
+class PerspectiveCamera 
+class Camera 
+class WebXRController 
+class WebXRDepthSensing 
+class WebXRManager 
+class WebGPURenderer 
+class WebGPURenderer 
+class WebGPUBackend 
+class WebGPUTextureUtils 
+class WebGPUAttributeUtils 
+class WebGPUTimestampQueryPool 
+class WebGPUTexturePassUtils 
+class WebGPUPipelineUtils 
+class WebGPUUtils 
+class WebGPUBindingUtils 
+class WGSLNodeFunction 
+class WGSLNodeParser 
+class BasicNodeLibrary 
+class WGSLNodeBuilder 
+class StandardNodeLibrary 
+class WebGLArrayRenderTarget 
+class WebGLCubeRenderTarget 
+class WebGLRenderer 
+class SingleUniform 
+class PureArrayUniform 
+class StructuredUniform 
+class WebGLUniforms 
+class WebGLShaderCache 
+class WebGLShaderStage 
+class WebGL3DRenderTarget 
+class Info 
+class Pipeline 
+class RenderObject 
+class Color4 
+class Bindings 
+class Animation 
+class RenderList 
+class RenderPipeline 
+class StorageInstancedBufferAttribute 
+class PostProcessing 
+class TimestampQueryPool 
+class Geometries 
+class RenderObjects 
+class ChainMap 
+class UniformBuffer 
+class ProgrammableStage 
+class Lighting 
+class RenderLists 
+class Backend 
+class XRRenderTarget 
+class IndirectStorageBufferAttribute 
+class StorageBuffer 
+class Buffer 
+class QuadGeometry 
+class QuadMesh 
+class Binding 
+class Attributes 
+class RenderBundle 
+class CubeRenderTarget 
+class BundleGroup 
+class RenderContext 
+class Sampler 
+class StorageTexture 
+class UniformsGroup 
+class DataMap 
+class XRManager 
+class Background 
+class Uniform 
+class NumberUniform 
+class Vector2Uniform 
+class Vector3Uniform 
+class Vector4Uniform 
+class ColorUniform 
+class Matrix2Uniform 
+class Matrix3Uniform 
+class Matrix4Uniform 
+class StorageBufferAttribute 
+class Textures 
+class Pipelines 
+class ComputePipeline 
+class SampledTexture 
+class SampledArrayTexture 
+class Sampled3DTexture 
+class SampledCubeTexture 
+class ClippingContext 
+class Renderer 
+class RenderBundles 
+class RenderContexts 
+class BindGroup 
+class NodeUniformsGroup 
+class Nodes 
+class NodeSampledTexture 
+class NodeSampledCubeTexture 
+class NodeSampledTexture3D 
+class NodeLibrary 
+class NodeUniformBuffer 
+class NodeBuilderState 
+class NodeSampler 
+class NodeStorageBuffer 
+class NumberNodeUniform 
+class Vector2NodeUniform 
+class Vector3NodeUniform 
+class Vector4NodeUniform 
+class ColorNodeUniform 
+class Matrix2NodeUniform 
+class Matrix3NodeUniform 
+class Matrix4NodeUniform 
+class PMREMGenerator 
+class WebGLRenderTarget 
+class WebGLBufferRenderer 
+class WebGLBackend 
+class WebGLTextureUtils 
+class WebGLCapabilities 
+class WebGLTimestampQueryPool 
+class WebGLState 
+class WebGLExtensions 
+class DualAttributeData 
+class WebGLAttributeUtils 
+class WebGLUtils 
+class GLSLNodeBuilder 
+class AnimationLoader 
+class ImageBitmapLoader 
+class Loader 
+class LoaderUtils 
+class ImageLoader 
+class DataTextureLoader 
+class CubeTextureLoader 
+class HttpError 
+class FileLoader 
+class CompressedTextureLoader 
+class AudioLoader 
+class BufferGeometryLoader 
+class TextureLoader 
+class MaterialLoader 
+class NodeLoader 
+class NodeObjectLoader 
+class NodeMaterialLoader 
+class ObjectLoader 
+class LoadingManager 
+class MeshPhongMaterial 
+class MeshDistanceMaterial 
+class LineBasicMaterial 
+class PointsMaterial 
+class MeshLambertMaterial 
+class LineDashedMaterial 
+class MeshPhysicalMaterial 
+class MeshDepthMaterial 
+class ShaderMaterial 
+class MeshStandardMaterial 
+class SpriteMaterial 
+class MeshToonMaterial 
+class MeshMatcapMaterial 
+class MeshNormalMaterial 
+class MeshBasicMaterial 
+class RawShaderMaterial 
+class Material 
+class LineDashedNodeMaterial 
+class NodeMaterial 
+class MeshPhysicalNodeMaterial 
+class MeshMatcapNodeMaterial 
+class LineBasicNodeMaterial 
+class SpriteNodeMaterial 
+class SSSLightingModel 
+class MeshSSSNodeMaterial 
+class MeshToonNodeMaterial 
+class MeshPhongNodeMaterial 
+class MeshLambertNodeMaterial 
+class MeshNormalNodeMaterial 
+class PointsNodeMaterial 
+class NodeMaterialObserver 
+class MeshStandardNodeMaterial 
+class MeshBasicNodeMaterial 
+class Line2NodeMaterial 
+class VolumeNodeMaterial 
+class ShadowNodeMaterial 
+class ShadowMaterial 
+class AudioListener 
+class AudioContext 
+class AudioAnalyser 
+class PositionalAudio 
+class Audio 
+class InstancedBufferAttribute 
+class Object3D 
+class EventDispatcher 
+class InterleavedBuffer 
+class Clock 
+class BufferAttribute 
+class Int8BufferAttribute 
+class Uint8BufferAttribute 
+class Uint8ClampedBufferAttribute 
+class Int16BufferAttribute 
+class Uint16BufferAttribute 
+class Int32BufferAttribute 
+class Uint32BufferAttribute 
+class Float16BufferAttribute 
+class Float32BufferAttribute 
+class Raycaster 
+class InstancedBufferGeometry 
+class InterleavedBufferAttribute 
+class BufferGeometry 
+class RenderTarget3D 
+class Layers 
+class RenderTarget 
+class UniformsGroup 
+class Uniform 
+class InstancedInterleavedBuffer 
+class GLBufferAttribute 
+class Scene 
+class Fog 
+class FogExp2 
+class AnimationMixer 
+class AnimationAction 
+class Composite 
+class PropertyBinding 
+class AnimationUtils 
+class KeyframeTrack 
+class AnimationClip 
+class PropertyMixer 
+class VectorKeyframeTrack 
+class ColorKeyframeTrack 
+class QuaternionKeyframeTrack 
+class StringKeyframeTrack 
+class NumberKeyframeTrack 
+class BooleanKeyframeTrack 
+class AnimationObjectGroup 
+class RendererReferenceNode 
+class InstanceNode 
+class StorageBufferNode 
+class VelocityNode 
+class PointUVNode 
+class SkinningNode 
+class BufferAttributeNode 
+class TextureNode 
+class SceneNode 
+class MorphNode 
+class BatchNode 
+class CubeTextureNode 
+class TextureSizeNode 
+class ReferenceElementNode 
+class ReferenceNode 
+class Object3DNode 
+class Texture3DNode 
+class BuiltinNode 
+class InstancedMeshNode 
+class UserDataNode 
+class ModelNode 
+class ReferenceElementNode 
+class ReferenceBaseNode 
+class MaterialReferenceNode 
+class VertexColorNode 
+class MaterialNode 
+class StorageTextureNode 
+class BufferNode 
+class ClippingNode 
+class UniformArrayElementNode 
+class UniformArrayNode 
+class PMREMNode 
+class ConditionalNode 
+class OperatorNode 
+class MathNode 
+class BasicLightingModel 
+class VolumetricLightingModel 
+class PhongLightingModel 
+class ToonLightingModel 
+class ShadowMaskModel 
+class PhysicalLightingModel 
+class FunctionNode 
+class ScriptableValueNode 
+class Resources 
+class Parameters 
+class ScriptableNode 
+class CodeNode 
+class FunctionCallNode 
+class ExpressionNode 
+class ComputeNode 
+class ComputeBuiltinNode 
+class WorkgroupInfoElementNode 
+class WorkgroupInfoNode 
+class AtomicFunctionNode 
+class BarrierNode 
+class RectAreaLightNode 
+class IrradianceNode 
+class PointShadowNode 
+class PointLightNode 
+class HemisphereLightNode 
+class DirectionalLightNode 
+class LightingNode 
+class AnalyticLightNode 
+class IESSpotLightNode 
+class LightsNode 
+class SpotLightNode 
+class BasicEnvironmentNode 
+class BasicLightMapNode 
+class ShadowNode 
+class LightProbeNode 
+class AONode 
+class LightingContextNode 
+class AmbientLightNode 
+class ProjectorLightNode 
+class EnvironmentNode 
+class ShadowBaseNode 
+class ShaderCallNodeInternal 
+class ShaderNodeInternal 
+class ViewportTextureNode 
+class ViewportSharedTextureNode 
+class ToneMappingNode 
+class ColorSpaceNode 
+class ViewportDepthNode 
+class BumpMapNode 
+class RenderOutputNode 
+class PosterizeNode 
+class ViewportDepthTextureNode 
+class FrontFacingNode 
+class ScreenNode 
+class NormalMapNode 
+class ToonOutlinePassNode 
+class PassTextureNode 
+class PassMultipleTextureNode 
+class PassNode 
+class RangeNode 
+class FunctionOverloadingNode 
+class SetNode 
+class RemapNode 
+class ReflectorNode 
+class ReflectorBaseNode 
+class EquirectUVNode 
+class ConvertNode 
+class StorageArrayElementNode 
+class ArrayElementNode 
+class LoopNode 
+class SplitNode 
+class JoinNode 
+class CubeMapNode 
+class SpriteSheetUVNode 
+class MatcapUVNode 
+class TriplanarTexturesNode 
+class FlipNode 
+class MaxMipLevelNode 
+class RTTNode 
+class DebugNode 
+class MemberNode 
+class RotateNode 
+class NodeBuilder 
+class StructType 
+class AttributeNode 
+class StructTypeNode 
+class StackNode 
+class ConstNode 
+class VaryingNode 
+class CacheNode 
+class ContextNode 
+class TempNode 
+class MRTNode 
+class IndexNode 
+class VarNode 
+class ArrayNode 
+class LightingModel 
+class NodeVarying 
+class AssignNode 
+class NodeFunctionInput 
+class OutputStructNode 
+class NodeFunction 
+class NodeAttribute 
+class ParameterNode 
+class InputNode 
+class NodeCode 
+class BypassNode 
+class PropertyNode 
+class NodeVar 
+class NodeFrame 
+class UniformNode 
+class NodeCache 
+class StructNode 
+class NodeUniform 
+class Node 
+class UniformGroupNode 
+class NodeParser 
+class GLSLNodeFunction 
+class GLSLNodeParser 
+class DataUtils 
+class ShapeUtils 
+class ImageUtils 
+class PMREMGenerator 
+class Controls 
+class TextureUtils 
+class Earcut 
+class Shape 
+class ShapePath 
+class Path 
+class CurvePath 
+class Curve 
+class SplineCurve 
+class LineCurve 
+class LineCurve3 
+class ArcCurve 
+class CubicBezierCurve3 
+class EllipseCurve 
+class QuadraticBezierCurve3 
+class QuadraticBezierCurve 
+class CatmullRomCurve3 
+class CubicBezierCurve 
+
+
+LightProbe --|> Light 
+IESSpotLight --|> SpotLight 
+ProjectorLight --|> SpotLight 
+PointLightShadow --|> LightShadow 
+PointLight --|> Light 
+HemisphereLight --|> Light 
+SpotLightShadow --|> LightShadow 
+DirectionalLight --|> Light 
+DirectionalLightShadow --|> LightShadow 
+RectAreaLight --|> Light 
+SpotLight --|> Light 
+AmbientLight --|> Light 
+Light --|> Object3D 
+CubeTexture --|> Texture 
+CompressedArrayTexture --|> CompressedTexture 
+CompressedCubeTexture --|> CompressedTexture 
+Texture --|> EventDispatcher 
+DataTexture --|> Texture 
+VideoTexture --|> Texture 
+FramebufferTexture --|> Texture 
+CanvasTexture --|> Texture 
+VideoFrameTexture --|> VideoTexture 
+DataArrayTexture --|> Texture 
+DepthTexture --|> Texture 
+Data3DTexture --|> Texture 
+CompressedTexture --|> Texture 
+Box3Helper --|> LineSegments 
+AxesHelper --|> LineSegments 
+PlaneHelper --|> Line 
+SkeletonHelper --|> LineSegments 
+PolarGridHelper --|> LineSegments 
+HemisphereLightHelper --|> Object3D 
+CameraHelper --|> LineSegments 
+BoxHelper --|> LineSegments 
+GridHelper --|> LineSegments 
+SpotLightHelper --|> Object3D 
+ArrowHelper --|> Object3D 
+PointLightHelper --|> Mesh 
+DirectionalLightHelper --|> Object3D 
+TorusKnotGeometry --|> BufferGeometry 
+BoxGeometry --|> BufferGeometry 
+ExtrudeGeometry --|> BufferGeometry 
+LatheGeometry --|> BufferGeometry 
+OctahedronGeometry --|> PolyhedronGeometry 
+ConeGeometry --|> CylinderGeometry 
+TorusGeometry --|> BufferGeometry 
+CapsuleGeometry --|> BufferGeometry 
+EdgesGeometry --|> BufferGeometry 
+PlaneGeometry --|> BufferGeometry 
+WireframeGeometry --|> BufferGeometry 
+TubeGeometry --|> BufferGeometry 
+SphereGeometry --|> BufferGeometry 
+RingGeometry --|> BufferGeometry 
+DodecahedronGeometry --|> PolyhedronGeometry 
+TetrahedronGeometry --|> PolyhedronGeometry 
+IcosahedronGeometry --|> PolyhedronGeometry 
+CircleGeometry --|> BufferGeometry 
+ShapeGeometry --|> BufferGeometry 
+CylinderGeometry --|> BufferGeometry 
+PolyhedronGeometry --|> BufferGeometry 
+DiscreteInterpolant --|> Interpolant 
+LinearInterpolant --|> Interpolant 
+CubicInterpolant --|> Interpolant 
+QuaternionLinearInterpolant --|> Interpolant 
+LineSegments --|> Line 
+Line --|> Object3D 
+Mesh --|> Object3D 
+ClippingGroup --|> Group 
+BatchedMesh --|> Mesh 
+Bone --|> Object3D 
+Points --|> Object3D 
+Sprite --|> Object3D 
+LineLoop --|> Line 
+SkinnedMesh --|> Mesh 
+InstancedMesh --|> Mesh 
+LOD --|> Object3D 
+Group --|> Object3D 
+CubeCamera --|> Object3D 
+OrthographicCamera --|> Camera 
+ArrayCamera --|> PerspectiveCamera 
+PerspectiveCamera --|> Camera 
+Camera --|> Object3D 
+WebXRManager --|> EventDispatcher 
+WebGPURenderer --|> Renderer 
+WebGPURenderer --|> Renderer 
+WebGPUBackend --|> Backend 
+WebGPUTimestampQueryPool --|> TimestampQueryPool 
+WebGPUTexturePassUtils --|> DataMap 
+WGSLNodeFunction --|> NodeFunction 
+WGSLNodeParser --|> NodeParser 
+BasicNodeLibrary --|> NodeLibrary 
+WGSLNodeBuilder --|> NodeBuilder 
+StandardNodeLibrary --|> NodeLibrary 
+WebGLArrayRenderTarget --|> WebGLRenderTarget 
+WebGLCubeRenderTarget --|> WebGLRenderTarget 
+WebGL3DRenderTarget --|> WebGLRenderTarget 
+Color4 --|> Color 
+Bindings --|> DataMap 
+RenderPipeline --|> Pipeline 
+StorageInstancedBufferAttribute --|> InstancedBufferAttribute 
+Geometries --|> DataMap 
+UniformBuffer --|> Buffer 
+Lighting --|> ChainMap 
+XRRenderTarget --|> RenderTarget 
+IndirectStorageBufferAttribute --|> StorageBufferAttribute 
+StorageBuffer --|> Buffer 
+Buffer --|> Binding 
+QuadGeometry --|> BufferGeometry 
+QuadMesh --|> Mesh 
+Attributes --|> DataMap 
+CubeRenderTarget --|> WebGLCubeRenderTarget 
+BundleGroup --|> Group 
+Sampler --|> Binding 
+StorageTexture --|> Texture 
+UniformsGroup --|> UniformBuffer 
+XRManager --|> EventDispatcher 
+Background --|> DataMap 
+NumberUniform --|> Uniform 
+Vector2Uniform --|> Uniform 
+Vector3Uniform --|> Uniform 
+Vector4Uniform --|> Uniform 
+ColorUniform --|> Uniform 
+Matrix2Uniform --|> Uniform 
+Matrix3Uniform --|> Uniform 
+Matrix4Uniform --|> Uniform 
+StorageBufferAttribute --|> BufferAttribute 
+Textures --|> DataMap 
+Pipelines --|> DataMap 
+ComputePipeline --|> Pipeline 
+SampledTexture --|> Binding 
+SampledArrayTexture --|> SampledTexture 
+Sampled3DTexture --|> SampledTexture 
+SampledCubeTexture --|> SampledTexture 
+NodeUniformsGroup --|> UniformsGroup 
+Nodes --|> DataMap 
+NodeSampledTexture --|> SampledTexture 
+NodeSampledCubeTexture --|> NodeSampledTexture 
+NodeSampledTexture3D --|> NodeSampledTexture 
+NodeUniformBuffer --|> UniformBuffer 
+NodeSampler --|> Sampler 
+NodeStorageBuffer --|> StorageBuffer 
+NumberNodeUniform --|> NumberUniform 
+Vector2NodeUniform --|> Vector2Uniform 
+Vector3NodeUniform --|> Vector3Uniform 
+Vector4NodeUniform --|> Vector4Uniform 
+ColorNodeUniform --|> ColorUniform 
+Matrix2NodeUniform --|> Matrix2Uniform 
+Matrix3NodeUniform --|> Matrix3Uniform 
+Matrix4NodeUniform --|> Matrix4Uniform 
+WebGLRenderTarget --|> RenderTarget 
+WebGLBackend --|> Backend 
+WebGLTimestampQueryPool --|> TimestampQueryPool 
+GLSLNodeBuilder --|> NodeBuilder 
+AnimationLoader --|> Loader 
+ImageBitmapLoader --|> Loader 
+ImageLoader --|> Loader 
+DataTextureLoader --|> Loader 
+CubeTextureLoader --|> Loader 
+HttpError --|> Error 
+FileLoader --|> Loader 
+CompressedTextureLoader --|> Loader 
+AudioLoader --|> Loader 
+BufferGeometryLoader --|> Loader 
+TextureLoader --|> Loader 
+MaterialLoader --|> Loader 
+NodeLoader --|> Loader 
+NodeObjectLoader --|> ObjectLoader 
+NodeMaterialLoader --|> MaterialLoader 
+ObjectLoader --|> Loader 
+MeshPhongMaterial --|> Material 
+MeshDistanceMaterial --|> Material 
+LineBasicMaterial --|> Material 
+PointsMaterial --|> Material 
+MeshLambertMaterial --|> Material 
+LineDashedMaterial --|> LineBasicMaterial 
+MeshPhysicalMaterial --|> MeshStandardMaterial 
+MeshDepthMaterial --|> Material 
+ShaderMaterial --|> Material 
+MeshStandardMaterial --|> Material 
+SpriteMaterial --|> Material 
+MeshToonMaterial --|> Material 
+MeshMatcapMaterial --|> Material 
+MeshNormalMaterial --|> Material 
+MeshBasicMaterial --|> Material 
+RawShaderMaterial --|> ShaderMaterial 
+Material --|> EventDispatcher 
+LineDashedNodeMaterial --|> NodeMaterial 
+NodeMaterial --|> Material 
+MeshPhysicalNodeMaterial --|> MeshStandardNodeMaterial 
+MeshMatcapNodeMaterial --|> NodeMaterial 
+LineBasicNodeMaterial --|> NodeMaterial 
+SpriteNodeMaterial --|> NodeMaterial 
+SSSLightingModel --|> PhysicalLightingModel 
+MeshSSSNodeMaterial --|> MeshPhysicalNodeMaterial 
+MeshToonNodeMaterial --|> NodeMaterial 
+MeshPhongNodeMaterial --|> NodeMaterial 
+MeshLambertNodeMaterial --|> NodeMaterial 
+MeshNormalNodeMaterial --|> NodeMaterial 
+PointsNodeMaterial --|> SpriteNodeMaterial 
+MeshStandardNodeMaterial --|> NodeMaterial 
+MeshBasicNodeMaterial --|> NodeMaterial 
+Line2NodeMaterial --|> NodeMaterial 
+VolumeNodeMaterial --|> NodeMaterial 
+ShadowNodeMaterial --|> NodeMaterial 
+ShadowMaterial --|> Material 
+AudioListener --|> Object3D 
+PositionalAudio --|> Audio 
+Audio --|> Object3D 
+InstancedBufferAttribute --|> BufferAttribute 
+Object3D --|> EventDispatcher 
+Int8BufferAttribute --|> BufferAttribute 
+Uint8BufferAttribute --|> BufferAttribute 
+Uint8ClampedBufferAttribute --|> BufferAttribute 
+Int16BufferAttribute --|> BufferAttribute 
+Uint16BufferAttribute --|> BufferAttribute 
+Int32BufferAttribute --|> BufferAttribute 
+Uint32BufferAttribute --|> BufferAttribute 
+Float16BufferAttribute --|> BufferAttribute 
+Float32BufferAttribute --|> BufferAttribute 
+InstancedBufferGeometry --|> BufferGeometry 
+BufferGeometry --|> EventDispatcher 
+RenderTarget3D --|> RenderTarget 
+RenderTarget --|> EventDispatcher 
+UniformsGroup --|> EventDispatcher 
+InstancedInterleavedBuffer --|> InterleavedBuffer 
+Scene --|> Object3D 
+AnimationMixer --|> EventDispatcher 
+VectorKeyframeTrack --|> KeyframeTrack 
+ColorKeyframeTrack --|> KeyframeTrack 
+QuaternionKeyframeTrack --|> KeyframeTrack 
+StringKeyframeTrack --|> KeyframeTrack 
+NumberKeyframeTrack --|> KeyframeTrack 
+BooleanKeyframeTrack --|> KeyframeTrack 
+RendererReferenceNode --|> ReferenceBaseNode 
+InstanceNode --|> Node 
+StorageBufferNode --|> BufferNode 
+VelocityNode --|> TempNode 
+PointUVNode --|> Node 
+SkinningNode --|> Node 
+BufferAttributeNode --|> InputNode 
+TextureNode --|> UniformNode 
+SceneNode --|> Node 
+MorphNode --|> Node 
+BatchNode --|> Node 
+CubeTextureNode --|> TextureNode 
+TextureSizeNode --|> Node 
+ReferenceElementNode --|> ArrayElementNode 
+ReferenceNode --|> Node 
+Object3DNode --|> Node 
+Texture3DNode --|> TextureNode 
+BuiltinNode --|> Node 
+InstancedMeshNode --|> InstanceNode 
+UserDataNode --|> ReferenceNode 
+ModelNode --|> Object3DNode 
+ReferenceElementNode --|> ArrayElementNode 
+ReferenceBaseNode --|> Node 
+MaterialReferenceNode --|> ReferenceNode 
+VertexColorNode --|> AttributeNode 
+MaterialNode --|> Node 
+StorageTextureNode --|> TextureNode 
+BufferNode --|> UniformNode 
+ClippingNode --|> Node 
+UniformArrayElementNode --|> ArrayElementNode 
+UniformArrayNode --|> BufferNode 
+PMREMNode --|> TempNode 
+ConditionalNode --|> Node 
+OperatorNode --|> TempNode 
+MathNode --|> TempNode 
+BasicLightingModel --|> LightingModel 
+VolumetricLightingModel --|> LightingModel 
+PhongLightingModel --|> BasicLightingModel 
+ToonLightingModel --|> LightingModel 
+ShadowMaskModel --|> LightingModel 
+PhysicalLightingModel --|> LightingModel 
+FunctionNode --|> CodeNode 
+ScriptableValueNode --|> Node 
+Resources --|> Map 
+ScriptableNode --|> Node 
+CodeNode --|> Node 
+FunctionCallNode --|> TempNode 
+ExpressionNode --|> Node 
+ComputeNode --|> Node 
+ComputeBuiltinNode --|> Node 
+WorkgroupInfoElementNode --|> ArrayElementNode 
+WorkgroupInfoNode --|> Node 
+AtomicFunctionNode --|> Node 
+BarrierNode --|> Node 
+RectAreaLightNode --|> AnalyticLightNode 
+IrradianceNode --|> LightingNode 
+PointShadowNode --|> ShadowNode 
+PointLightNode --|> AnalyticLightNode 
+HemisphereLightNode --|> AnalyticLightNode 
+DirectionalLightNode --|> AnalyticLightNode 
+LightingNode --|> Node 
+AnalyticLightNode --|> LightingNode 
+IESSpotLightNode --|> SpotLightNode 
+LightsNode --|> Node 
+SpotLightNode --|> AnalyticLightNode 
+BasicEnvironmentNode --|> LightingNode 
+BasicLightMapNode --|> LightingNode 
+ShadowNode --|> ShadowBaseNode 
+LightProbeNode --|> AnalyticLightNode 
+AONode --|> LightingNode 
+LightingContextNode --|> ContextNode 
+AmbientLightNode --|> AnalyticLightNode 
+ProjectorLightNode --|> SpotLightNode 
+EnvironmentNode --|> LightingNode 
+ShadowBaseNode --|> Node 
+ShaderCallNodeInternal --|> Node 
+ShaderNodeInternal --|> Node 
+ViewportTextureNode --|> TextureNode 
+ViewportSharedTextureNode --|> ViewportTextureNode 
+ToneMappingNode --|> TempNode 
+ColorSpaceNode --|> TempNode 
+ViewportDepthNode --|> Node 
+BumpMapNode --|> TempNode 
+RenderOutputNode --|> TempNode 
+PosterizeNode --|> TempNode 
+ViewportDepthTextureNode --|> ViewportTextureNode 
+FrontFacingNode --|> Node 
+ScreenNode --|> Node 
+NormalMapNode --|> TempNode 
+ToonOutlinePassNode --|> PassNode 
+PassTextureNode --|> TextureNode 
+PassMultipleTextureNode --|> PassTextureNode 
+PassNode --|> TempNode 
+RangeNode --|> Node 
+FunctionOverloadingNode --|> Node 
+SetNode --|> TempNode 
+RemapNode --|> Node 
+ReflectorNode --|> TextureNode 
+ReflectorBaseNode --|> Node 
+EquirectUVNode --|> TempNode 
+ConvertNode --|> Node 
+StorageArrayElementNode --|> ArrayElementNode 
+ArrayElementNode --|> Node 
+LoopNode --|> Node 
+SplitNode --|> Node 
+JoinNode --|> TempNode 
+CubeMapNode --|> TempNode 
+SpriteSheetUVNode --|> Node 
+MatcapUVNode --|> TempNode 
+TriplanarTexturesNode --|> Node 
+FlipNode --|> TempNode 
+MaxMipLevelNode --|> UniformNode 
+RTTNode --|> TextureNode 
+DebugNode --|> TempNode 
+MemberNode --|> Node 
+RotateNode --|> TempNode 
+AttributeNode --|> Node 
+StructTypeNode --|> Node 
+StackNode --|> Node 
+ConstNode --|> InputNode 
+VaryingNode --|> Node 
+CacheNode --|> Node 
+ContextNode --|> Node 
+TempNode --|> Node 
+MRTNode --|> OutputStructNode 
+IndexNode --|> Node 
+VarNode --|> Node 
+ArrayNode --|> TempNode 
+NodeVarying --|> NodeVar 
+AssignNode --|> TempNode 
+OutputStructNode --|> Node 
+ParameterNode --|> PropertyNode 
+InputNode --|> Node 
+BypassNode --|> Node 
+PropertyNode --|> Node 
+UniformNode --|> InputNode 
+StructNode --|> Node 
+Node --|> EventDispatcher 
+UniformGroupNode --|> Node 
+GLSLNodeFunction --|> NodeFunction 
+GLSLNodeParser --|> NodeParser 
+Controls --|> EventDispatcher 
+Shape --|> Path 
+Path --|> CurvePath 
+CurvePath --|> Curve 
+SplineCurve --|> Curve 
+LineCurve --|> Curve 
+LineCurve3 --|> Curve 
+ArcCurve --|> EllipseCurve 
+CubicBezierCurve3 --|> Curve 
+EllipseCurve --|> Curve 
+QuadraticBezierCurve3 --|> Curve 
+QuadraticBezierCurve --|> Curve 
+CatmullRomCurve3 --|> Curve 
+CubicBezierCurve --|> Curve 
+
+
+@enduml
+
+
