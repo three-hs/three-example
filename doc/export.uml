@@ -1,0 +1,377 @@
+
+
+@startuml
+
+left to right direction
+
+class WebGLRenderer
+class PMREMGenerator
+class WebGLArrayRenderTarget 
+class WebGL3DRenderTarget 
+class WebGLCubeRenderTarget 
+class WebGLRenderTarget 
+class WebXRController
+class FogExp2
+class Fog
+class Scene 
+class Sprite 
+class LOD 
+class SkinnedMesh 
+class Skeleton
+class Bone 
+class Mesh 
+class InstancedMesh 
+class MultiDrawRenderList
+class BatchedMesh 
+class LineSegments 
+class LineLoop 
+class Line 
+class Points 
+class Group 
+class VideoTexture 
+class VideoFrameTexture 
+class FramebufferTexture 
+class Source
+class DataTexture 
+class DataArrayTexture 
+class Data3DTexture 
+class CompressedTexture 
+class CompressedArrayTexture 
+class CompressedCubeTexture 
+class CubeTexture 
+class CanvasTexture 
+class DepthTexture 
+class Texture 
+class AnimationLoader 
+class CompressedTextureLoader 
+class CubeTextureLoader 
+class DataTextureLoader 
+class TextureLoader 
+class ObjectLoader 
+class MaterialLoader 
+class BufferGeometryLoader 
+class LoadingManager
+class ImageLoader 
+class ImageBitmapLoader 
+class HttpError 
+class FileLoader 
+class Loader
+class LoaderUtils
+class AudioLoader 
+class SpotLight 
+class PointLight 
+class RectAreaLight 
+class HemisphereLight 
+class DirectionalLight 
+class AmbientLight 
+class Light 
+class LightProbe 
+class StereoCamera
+class PerspectiveCamera 
+class OrthographicCamera 
+class CubeCamera 
+class ArrayCamera 
+class Camera 
+class AudioListener 
+class PositionalAudio 
+class AudioContext
+class AudioAnalyser
+class Audio 
+class VectorKeyframeTrack 
+class StringKeyframeTrack 
+class QuaternionKeyframeTrack 
+class NumberKeyframeTrack 
+class ColorKeyframeTrack 
+class BooleanKeyframeTrack 
+class PropertyMixer
+class Composite
+class PropertyBinding
+class KeyframeTrack
+class AnimationUtils
+class AnimationObjectGroup
+class AnimationMixer 
+class AnimationClip
+class AnimationAction
+class RenderTarget 
+class RenderTarget3D 
+class Uniform
+class UniformsGroup 
+class InstancedBufferGeometry 
+class BufferGeometry 
+class InterleavedBufferAttribute
+class InstancedInterleavedBuffer 
+class InterleavedBuffer
+class InstancedBufferAttribute 
+class GLBufferAttribute
+class Object3D 
+class Raycaster
+class Layers
+class EventDispatcher
+class Clock
+class QuaternionLinearInterpolant 
+class LinearInterpolant 
+class DiscreteInterpolant 
+class CubicInterpolant 
+class Interpolant
+class Triangle
+class Spherical
+class Cylindrical
+class Plane
+class Frustum
+class FrustumArray
+class Sphere
+class Ray
+class Matrix4
+class Matrix3
+class Box3
+class Box2
+class Line3
+class Euler
+class Vector4
+class Vector3
+class Vector2
+class Quaternion
+class Color
+class SphericalHarmonics3
+class SpotLightHelper 
+class SkeletonHelper 
+class PointLightHelper 
+class HemisphereLightHelper 
+class GridHelper 
+class PolarGridHelper 
+class DirectionalLightHelper 
+class CameraHelper 
+class BoxHelper 
+class Box3Helper 
+class PlaneHelper 
+class ArrowHelper 
+class AxesHelper 
+class Shape 
+class Path 
+class ShapePath
+class CurvePath 
+class Curve
+class Controls 
+class DataUtils
+class ImageUtils
+class ShapeUtils
+class TextureUtils
+class BufferAttribute
+class Int8BufferAttribute 
+class Uint8BufferAttribute 
+class Uint8ClampedBufferAttribute 
+class Int16BufferAttribute 
+class Uint16BufferAttribute 
+class Int32BufferAttribute 
+class Uint32BufferAttribute 
+class Float16BufferAttribute 
+class Float32BufferAttribute 
+class BoxGeometry 
+class CapsuleGeometry 
+class CircleGeometry 
+class ConeGeometry 
+class CylinderGeometry 
+class DodecahedronGeometry 
+class EdgesGeometry 
+class ExtrudeGeometry 
+class IcosahedronGeometry 
+class LatheGeometry 
+class OctahedronGeometry 
+class PlaneGeometry 
+class PolyhedronGeometry 
+class RingGeometry 
+class ShapeGeometry 
+class SphereGeometry 
+class TetrahedronGeometry 
+class TorusGeometry 
+class TorusKnotGeometry 
+class TubeGeometry 
+class WireframeGeometry 
+class ShadowMaterial 
+class SpriteMaterial 
+class RawShaderMaterial 
+class ShaderMaterial 
+class PointsMaterial 
+class MeshPhysicalMaterial 
+class MeshStandardMaterial 
+class MeshPhongMaterial 
+class MeshToonMaterial 
+class MeshNormalMaterial 
+class MeshLambertMaterial 
+class MeshDepthMaterial 
+class MeshDistanceMaterial 
+class MeshBasicMaterial 
+class MeshMatcapMaterial 
+class LineDashedMaterial 
+class LineBasicMaterial 
+class Material 
+class ArcCurve 
+class CatmullRomCurve3 
+class CubicBezierCurve 
+class CubicBezierCurve3 
+class EllipseCurve 
+class LineCurve 
+class LineCurve3 
+class QuadraticBezierCurve 
+class QuadraticBezierCurve3 
+class SplineCurve 
+
+
+WebGLArrayRenderTarget --|> WebGLRenderTarget
+WebGL3DRenderTarget --|> WebGLRenderTarget
+WebGLCubeRenderTarget --|> WebGLRenderTarget
+WebGLRenderTarget --|> RenderTarget
+Scene --|> Object3D
+Sprite --|> Object3D
+LOD --|> Object3D
+SkinnedMesh --|> Mesh
+Bone --|> Object3D
+Mesh --|> Object3D
+InstancedMesh --|> Mesh
+BatchedMesh --|> Mesh
+LineSegments --|> Line
+LineLoop --|> Line
+Line --|> Object3D
+Points --|> Object3D
+Group --|> Object3D
+VideoTexture --|> Texture
+VideoFrameTexture --|> VideoTexture
+FramebufferTexture --|> Texture
+DataTexture --|> Texture
+DataArrayTexture --|> Texture
+Data3DTexture --|> Texture
+CompressedTexture --|> Texture
+CompressedArrayTexture --|> CompressedTexture
+CompressedCubeTexture --|> CompressedTexture
+CubeTexture --|> Texture
+CanvasTexture --|> Texture
+DepthTexture --|> Texture
+Texture --|> EventDispatcher
+AnimationLoader --|> Loader
+CompressedTextureLoader --|> Loader
+CubeTextureLoader --|> Loader
+DataTextureLoader --|> Loader
+TextureLoader --|> Loader
+ObjectLoader --|> Loader
+MaterialLoader --|> Loader
+BufferGeometryLoader --|> Loader
+ImageLoader --|> Loader
+ImageBitmapLoader --|> Loader
+HttpError --|> Error
+FileLoader --|> Loader
+AudioLoader --|> Loader
+SpotLight --|> Light
+PointLight --|> Light
+RectAreaLight --|> Light
+HemisphereLight --|> Light
+DirectionalLight --|> Light
+AmbientLight --|> Light
+Light --|> Object3D
+LightProbe --|> Light
+PerspectiveCamera --|> Camera
+OrthographicCamera --|> Camera
+CubeCamera --|> Object3D
+ArrayCamera --|> PerspectiveCamera
+Camera --|> Object3D
+AudioListener --|> Object3D
+PositionalAudio --|> Audio
+Audio --|> Object3D
+VectorKeyframeTrack --|> KeyframeTrack
+StringKeyframeTrack --|> KeyframeTrack
+QuaternionKeyframeTrack --|> KeyframeTrack
+NumberKeyframeTrack --|> KeyframeTrack
+ColorKeyframeTrack --|> KeyframeTrack
+BooleanKeyframeTrack --|> KeyframeTrack
+AnimationMixer --|> EventDispatcher
+RenderTarget --|> EventDispatcher
+RenderTarget3D --|> RenderTarget
+UniformsGroup --|> EventDispatcher
+InstancedBufferGeometry --|> BufferGeometry
+BufferGeometry --|> EventDispatcher
+InstancedInterleavedBuffer --|> InterleavedBuffer
+InstancedBufferAttribute --|> BufferAttribute
+Object3D --|> EventDispatcher
+QuaternionLinearInterpolant --|> Interpolant
+LinearInterpolant --|> Interpolant
+DiscreteInterpolant --|> Interpolant
+CubicInterpolant --|> Interpolant
+SpotLightHelper --|> Object3D
+SkeletonHelper --|> LineSegments
+PointLightHelper --|> Mesh
+HemisphereLightHelper --|> Object3D
+GridHelper --|> LineSegments
+PolarGridHelper --|> LineSegments
+DirectionalLightHelper --|> Object3D
+CameraHelper --|> LineSegments
+BoxHelper --|> LineSegments
+Box3Helper --|> LineSegments
+PlaneHelper --|> Line
+ArrowHelper --|> Object3D
+AxesHelper --|> LineSegments
+Shape --|> Path
+Path --|> CurvePath
+CurvePath --|> Curve
+Controls --|> EventDispatcher
+Int8BufferAttribute --|> BufferAttribute
+Uint8BufferAttribute --|> BufferAttribute
+Uint8ClampedBufferAttribute --|> BufferAttribute
+Int16BufferAttribute --|> BufferAttribute
+Uint16BufferAttribute --|> BufferAttribute
+Int32BufferAttribute --|> BufferAttribute
+Uint32BufferAttribute --|> BufferAttribute
+Float16BufferAttribute --|> BufferAttribute
+Float32BufferAttribute --|> BufferAttribute
+BoxGeometry --|> BufferGeometry
+CapsuleGeometry --|> BufferGeometry
+CircleGeometry --|> BufferGeometry
+ConeGeometry --|> CylinderGeometry
+CylinderGeometry --|> BufferGeometry
+DodecahedronGeometry --|> PolyhedronGeometry
+EdgesGeometry --|> BufferGeometry
+ExtrudeGeometry --|> BufferGeometry
+IcosahedronGeometry --|> PolyhedronGeometry
+LatheGeometry --|> BufferGeometry
+OctahedronGeometry --|> PolyhedronGeometry
+PlaneGeometry --|> BufferGeometry
+PolyhedronGeometry --|> BufferGeometry
+RingGeometry --|> BufferGeometry
+ShapeGeometry --|> BufferGeometry
+SphereGeometry --|> BufferGeometry
+TetrahedronGeometry --|> PolyhedronGeometry
+TorusGeometry --|> BufferGeometry
+TorusKnotGeometry --|> BufferGeometry
+TubeGeometry --|> BufferGeometry
+WireframeGeometry --|> BufferGeometry
+ShadowMaterial --|> Material
+SpriteMaterial --|> Material
+RawShaderMaterial --|> ShaderMaterial
+ShaderMaterial --|> Material
+PointsMaterial --|> Material
+MeshPhysicalMaterial --|> MeshStandardMaterial
+MeshStandardMaterial --|> Material
+MeshPhongMaterial --|> Material
+MeshToonMaterial --|> Material
+MeshNormalMaterial --|> Material
+MeshLambertMaterial --|> Material
+MeshDepthMaterial --|> Material
+MeshDistanceMaterial --|> Material
+MeshBasicMaterial --|> Material
+MeshMatcapMaterial --|> Material
+LineDashedMaterial --|> LineBasicMaterial
+LineBasicMaterial --|> Material
+Material --|> EventDispatcher
+ArcCurve --|> EllipseCurve
+CatmullRomCurve3 --|> Curve
+CubicBezierCurve --|> Curve
+CubicBezierCurve3 --|> Curve
+EllipseCurve --|> Curve
+LineCurve --|> Curve
+LineCurve3 --|> Curve
+QuadraticBezierCurve --|> Curve
+QuadraticBezierCurve3 --|> Curve
+SplineCurve --|> Curve
+
+
+
+@enduml
+
