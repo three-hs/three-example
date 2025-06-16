@@ -54,9 +54,9 @@ main = run $ do
   -- light1 ^. position ^.  8 8 8
 
   -- TODO ideally, we want something like:
-  -- light1 ^. intensity .~ 200
-  -- light1 ^. position ^. _xyz .~ V3 8 8 8
-  -- camera1 ^. position ^. _z .~ 6 
+  -- light1 & intensity .~ 200
+  -- light1 & position . _xyz .~ V3 8 8 8
+  -- camera1 & position . _z .~ 6 
 
   -- tests
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
