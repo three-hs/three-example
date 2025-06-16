@@ -1,9 +1,15 @@
+
+-------------------------------------------------------------------------------
+-- main app (run with `make serve`)
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 import Control.Monad
 import Control.Lens hiding ((#))

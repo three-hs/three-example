@@ -6,11 +6,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-{-# OPTIONS_GHC -Wno-type-defaults #-}
-
-module Main1 where
-
-import Control.Lens
 import Language.Javascript.JSaddle as JS
 import Miso 
 import Miso.String (ms)
@@ -20,15 +15,6 @@ import THREE.Light
 import THREE.Material
 import THREE.MeshNormalMaterial
 import THREE.MeshPhysicalMaterial
-
-import THREE.Object3D
-import THREE.Scene
-import THREE.SphereGeometry
-import THREE.MeshLambertMaterial
-import THREE.Mesh
-import THREE.WebGLRenderer
-import THREE.PerspectiveCamera
-import THREE.PointLight
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()

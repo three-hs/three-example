@@ -5,7 +5,7 @@ version:                0.2
 common deps
   build-depends:        base, jsaddle, lens, miso, three
   default-language:     GHC2021
-  ghc-options:          -Wall -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start" -ddump-splices
+  ghc-options:          -Wall -Wno-unused-top-binds -Wno-type-defaults -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start" -ddump-splices
   cpp-options:          -DWASM
   default-extensions:   CPP TemplateHaskell
 

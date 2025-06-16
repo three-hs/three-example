@@ -10,8 +10,6 @@
 
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
-module Main3 where
-
 import Control.Monad
 import Control.Lens hiding ((#))
 import Language.Javascript.JSaddle as J

@@ -6,8 +6,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main2 where
-
 import Control.Lens
 import Language.Javascript.JSaddle as JS
 import Miso 
@@ -43,7 +41,7 @@ main = run $ do
 
   light1 <- THREE.PointLight.new
   light1 ^. jss "intensity" 200
-  light1 ^. js "position" ^. js3 "set" 8 8 8
+  _ <- light1 ^. js "position" ^. js3 "set" 8 8 8
   add scene1 light1
 
   camera1 <- THREE.PerspectiveCamera.new 70 (winWidthD / winHeightD) 0.1 100
