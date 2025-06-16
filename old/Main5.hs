@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
--- minimal API + example 
+-- main app (run with `make serve`)
 -------------------------------------------------------------------------------
 
 {-# LANGUAGE CPP #-}
@@ -8,12 +8,13 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-{-# OPTIONS_GHC -Wno-type-defaults #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 import Control.Monad
 import Control.Lens hiding ((#))
 import Language.Javascript.JSaddle as J
 import Miso 
+import Miso.String (ms)
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
@@ -26,32 +27,35 @@ foreign export javascript "hs_start" main :: IO ()
 main :: IO ()
 main = run $ do
 
-  doc <- jsg "document"
-  win <- jsg "window"
-  winWidthD <- valToNumber =<< win ^. js "innerWidth"
-  winHeightD <- valToNumber =<< win ^. js "innerHeight"
-  let winWidth = round winWidthD
-      winHeight = round winHeightD
+  winWidth <- winInnerWidth
+  winHeight <- winInnerHeight
+  let winWidthI = round winWidth
+  let winHeightI = round winHeight
 
   scene1 <- newScene 
 
   light1 <- newPointLight
-  light1 ^. jss "intensity" 200   -- TODO
-  void $ light1 ^. js "position" ^. js3 "set" 8 8 8    -- TODO
+  light1 ^. setIntensity 200
+  void $ light1 ^. getPosition ^. setXYZ 8 8 8    -- TODO
   add scene1 light1
+
+  intensity light1 >>= consoleLog . ms . show
+  position light1 >>= toXYZ >>= consoleLog . ms . show
+  light1 ^. getIntensity >>= valToNumber >>= consoleLog . ms . show
+  light1 ^. getPosition  >>= valToXYZ >>= consoleLog . ms . show
 
   geometry1 <- newSphereGeometry
   material1 <- newMeshLambertMaterial
   mesh1 <- newMesh geometry1 material1
   add scene1 mesh1
 
-  camera1 <- newPerspectiveCamera 70 (winWidthD / winHeightD) 0.1 100
-  camera1 ^. js "position" ^. jss "z" 6   -- TODO
+  camera1 <- newPerspectiveCamera 70 (winWidth / winHeight) 0.1 100
+  camera1 ^. getPosition ^. setZ 6 
+  -- camera1 ^. getPosition ^. jss "z" 6   -- TODO
 
   renderer1 <- newWebGLRenderer
-  setSize renderer1 winWidth winHeight True
-  elt <- renderer1 ! "domElement"
-  _ <- doc ^. js "body" ^. js1 "appendChild" elt
+  setSize renderer1 winWidthI winHeightI True
+  domElement renderer1 >>= appendInBody 
   render renderer1 scene1 camera1
 
 -------------------------------------------------------------------------------
@@ -69,9 +73,14 @@ new' f name args = do
 
 class Object3DC object where
   add :: (Object3DC a, MakeArgs a) => object -> a -> JSM ()
+  position :: object -> JSM Vector3
 
 instance Object3DC JSVal where
   add v x = void $ v # ("add" :: JSString) $ x
+  position v = fromJSValUnchecked =<< v ! "position"
+
+getPosition :: (Object3DC a, MakeObject a) => (JSM JSVal -> Const (JSM JSVal) (JSM JSVal)) -> a -> Const (JSM JSVal) a
+getPosition = js "position"
 
 -------------------------------------------------------------------------------
 -- Scene
@@ -98,6 +107,14 @@ class Object3DC a => LightC a where
 instance LightC JSVal where
   isLight v = fromJSValUnchecked =<< v ! ("isLight" :: JSString)
   intensity v = fromJSValUnchecked =<< v ! ("intensity" :: JSString)
+
+-- TODO add a "LightC a" constraint
+setIntensity :: Double -> forall a. MakeObject a => IndexPreservingGetter a (JSM ())
+setIntensity = jss "intensity"
+
+-- TODO add a "LightC a" constraint
+getIntensity :: (LightC a, MakeObject a) => (JSM JSVal -> Const (JSM JSVal) (JSM JSVal)) -> a -> Const (JSM JSVal) a
+getIntensity = js "intensity"
 
 -------------------------------------------------------------------------------
 -- PointLight
@@ -215,4 +232,53 @@ setSize (WebGLRenderer v) width height updateStyle = void $ v # ("setSize" :: JS
 
 render :: (ToJSVal a, Object3DC a, ToJSVal b, CameraC b) => WebGLRenderer -> a -> b -> JSM ()
 render (WebGLRenderer v) object camera = void $ v # ("render" :: JSString) $ (object, camera)
+
+-- the WebGLRenderer constructor creates a canvas element which can be added in the DOM
+domElement :: WebGLRenderer -> JSM JSVal
+domElement (WebGLRenderer v) = v ! "domElement"
+
+-------------------------------------------------------------------------------
+-- helpers
+-------------------------------------------------------------------------------
+
+newtype Vector3 = Vector3 { unVector3Camera :: JSVal }
+  deriving (MakeObject, ToJSVal, MakeArgs)
+
+instance FromJSVal Vector3 where
+  fromJSVal = pure .Just . Vector3
+
+newVector3 :: Double -> Double -> Double -> JSM Vector3
+newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
+
+-- TODO add a "Vector3 o" contraint
+setZ :: Double -> forall o. MakeObject o => IndexPreservingGetter o (JSM ())
+setZ = jss "z"
+ 
+setXYZ 
+  :: (MakeObject o, Conjoined p, Contravariant f, Functor f) 
+  => Double -> Double -> Double -> p (JSM JSVal) (f (JSM JSVal)) -> p o (f o)
+setXYZ x y z = js3 "set" x y z
+
+toXYZ :: Vector3 -> JSM (Double, Double, Double)
+toXYZ (Vector3 v) = valToXYZ v
+
+valToXYZ :: JSVal -> JSM (Double, Double, Double)
+valToXYZ v = do
+  x <- fromJSValUnchecked =<< v ! "x"
+  y <- fromJSValUnchecked =<< v ! "y"
+  z <- fromJSValUnchecked =<< v ! "z"
+  pure (x, y, z)
+
+-------------------------------------------------------------------------------
+-- helpers
+-------------------------------------------------------------------------------
+
+appendInBody :: JSVal -> JSM ()
+appendInBody v = void $ jsg "document" ^. js "body" ^. js1 "appendChild" v
+
+winInnerWidth :: JSM Double
+winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
+
+winInnerHeight :: JSM Double
+winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
 

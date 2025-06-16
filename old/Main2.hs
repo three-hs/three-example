@@ -6,6 +6,9 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
+
 import Control.Lens
 import Language.Javascript.JSaddle as JS
 import Miso 
