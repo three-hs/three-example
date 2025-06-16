@@ -51,7 +51,7 @@ main = run $ do
   -- TODO this shouldn't compile:
   -- scene1 ^. setIntensity 200
   -- scene1 ^. setZ 200
-  -- light1 ^. position ^.  8 8 8
+  -- scene1 ^. position ^. setXYZ 8 8 8
 
   -- TODO ideally, we want something like:
   -- light1 & intensity .~ 200
