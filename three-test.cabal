@@ -1,0 +1,31 @@
+cabal-version:          3.0
+name:                   three-test
+version:                0.2
+
+common deps
+  build-depends:        base, jsaddle, lens, miso, three
+  default-language:     GHC2021
+  ghc-options:          -Wall -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start" -ddump-splices
+  cpp-options:          -DWASM
+  default-extensions:   CPP TemplateHaskell
+
+executable app
+  import:               deps
+  hs-source-dirs:       src
+  main-is:              Main.hs
+
+executable app1
+  import:               deps
+  hs-source-dirs:       src
+  main-is:              Main1.hs
+
+executable app2
+  import:               deps
+  hs-source-dirs:       src
+  main-is:              Main2.hs
+
+executable app3
+  import:               deps
+  hs-source-dirs:       src
+  main-is:              Main3.hs
+

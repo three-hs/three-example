@@ -1,7 +1,14 @@
+
+-------------------------------------------------------------------------------
+-- basic tests, using the current tree github repo
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+
+module Main1 where
 
 import Control.Lens
 import Language.Javascript.JSaddle as JS
@@ -23,60 +30,15 @@ import THREE.WebGLRenderer
 import THREE.PerspectiveCamera
 import THREE.PointLight
 
--------------------------------------------------------------------------------
--- main
--------------------------------------------------------------------------------
-
-main :: IO ()
-main = run $ do
-  consoleLog "begin"
-  tests
-  mwe
-  consoleLog "end"
-
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
 #endif
 
--------------------------------------------------------------------------------
--- minimal working example
--------------------------------------------------------------------------------
+main :: IO ()
+main = run $ do
 
-mwe :: JSM ()
-mwe = do
-  doc <- jsg "document"
-  win <- jsg "window"
-  winWidthD <- valToNumber =<< win ^. js "innerWidth"
-  winHeightD <- valToNumber =<< win ^. js "innerHeight"
-  let winWidth = round winWidthD
-      winHeight = round winHeightD
+  consoleLog "begin"
 
-  scene1 <- THREE.Scene.new
-  geometry1 <- THREE.SphereGeometry.new
-  material1 <- THREE.MeshLambertMaterial.new
-  mesh1 <- THREE.Mesh.new (toBufferGeometry geometry1) material1
-  add scene1 mesh1
-
-  light1 <- THREE.PointLight.new
-  light1 ^. jss "intensity" 200
-  light1 ^. js "position" ^. js3 "set" 8 8 8
-  add scene1 light1
-
-  camera1 <- THREE.PerspectiveCamera.new 70 (winWidthD / winHeightD) 0.1 100
-  camera1 ^. js "position" ^. jss "z" 6
-
-  renderer1 <- THREE.WebGLRenderer.new
-  setSize renderer1 winWidth winHeight True
-  elt <- renderer1 ! "domElement"
-  _ <- doc ^. js "body" ^. js1 "appendChild" elt
-  render renderer1 scene1 camera1
-
--------------------------------------------------------------------------------
--- tests
--------------------------------------------------------------------------------
-
-tests :: JSM ()
-tests = do
 
   consoleLog "*** lights ***"
 
@@ -100,4 +62,7 @@ tests = do
 
   meshPhysicalMaterial1 <- THREE.MeshPhysicalMaterial.new
   iridescenceThicknessRange meshPhysicalMaterial1 >>= consoleLog . ms . show
+
+
+  consoleLog "end"
 

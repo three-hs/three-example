@@ -1,3 +1,8 @@
+
+-------------------------------------------------------------------------------
+-- minimal API + example 
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -5,7 +10,7 @@
 
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
-module Main where
+module Main3 where
 
 import Control.Monad
 import Control.Lens hiding ((#))

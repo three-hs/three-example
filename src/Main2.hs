@@ -1,7 +1,12 @@
+
+-------------------------------------------------------------------------------
+-- minimal example using the current tree github repo
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module Main2 where
 
 import Control.Lens
 import Language.Javascript.JSaddle as JS
