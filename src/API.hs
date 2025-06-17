@@ -1,4 +1,14 @@
 
+-------------------------------------------------------------------------------
+-- JS to Haskell rules:
+-- - if a JS class can be inherited -> define a Haskell typeclass
+-- - if a JS class can be instanciated -> define a Haskell newtype
+-- 
+-- TODO:
+-- - handle null value of a property (use a Maybe for the mkProp function?)
+-- - constructors with optional parameters or parameter object
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -48,14 +58,14 @@ module API
   , appendInBody
 
   , valToNumber
-  , get_
-  , set_
-  , modify_
+  , getProp
+  , setProp
+  , modifyProp
   ) where
 
 import Control.Monad
 import Control.Lens hiding ((#))
-import Language.Javascript.JSaddle as J
+import Language.Javascript.JSaddle as J hiding (getProp, setProp)
 
 -------------------------------------------------------------------------------
 -- Internal
@@ -66,21 +76,21 @@ new' f name args = do
   v <- jsg ("THREE" :: JSString) ! name
   f <$> J.new v args
 
-mkGetSet :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> a -> (b -> JSM b) -> JSM b
-mkGetSet name v f = do
+mkProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> a -> (b -> JSM b) -> JSM b
+mkProp name v f = do
     x0 <- fromJSValUnchecked =<< v ! name
     x1 <- f x0
     v ^. jss name x1
     pure x1
 
-get_ :: (t1 -> (a -> JSM a) -> t2) -> t1 -> t2
-get_ fProp v = fProp v pure
+getProp :: (t1 -> (a -> JSM a) -> t2) -> t1 -> t2
+getProp fProp v = fProp v pure
 
-set_ :: (p -> (b -> JSM a1) -> JSM a2) -> a1 -> p -> JSM ()
-set_ fProp x v = void $ fProp v (const $ pure x)
+setProp :: (p -> (b -> JSM a1) -> JSM a2) -> a1 -> p -> JSM ()
+setProp fProp x v = void $ fProp v (const $ pure x)
 
-modify_ :: (p -> (b -> JSM a2) -> JSM a2) -> (b -> JSM a2) -> p -> JSM a2
-modify_ fProp f v = fProp v f
+modifyProp :: (p -> (b -> JSM a2) -> JSM a2) -> (b -> JSM a2) -> p -> JSM a2
+modifyProp fProp f v = fProp v f
 
 -------------------------------------------------------------------------------
 -- Object3D
@@ -92,7 +102,7 @@ class Object3DC a where
 
 instance Object3DC JSVal where
   add v x = void $ v # ("add" :: JSString) $ x
-  position = mkGetSet "position"
+  position = mkProp "position"
 
 -------------------------------------------------------------------------------
 -- Scene
@@ -118,7 +128,7 @@ class Object3DC a => LightC a where
 
 instance LightC JSVal where
   isLight v = fromJSValUnchecked =<< v ! ("isLight" :: JSString)
-  intensity = mkGetSet "intensity"
+  intensity = mkProp "intensity"
 
 -------------------------------------------------------------------------------
 -- PointLight
@@ -246,7 +256,7 @@ newVector3 :: Double -> Double -> Double -> JSM Vector3
 newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
 
 z_ :: Vector3 -> (Double -> JSM Double) -> JSM Double
-z_ = mkGetSet "z"
+z_ = mkProp "z"
 
 setXYZ :: Double -> Double -> Double -> Vector3 -> JSM ()
 setXYZ x y z (Vector3 v) = void $ v ^. js3 "set" x y z
