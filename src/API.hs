@@ -10,13 +10,10 @@ module API
   , PointLight
   , winInnerWidth
   , winInnerHeight
-  , valToXYZ
+  , vector3ToXYZ
   , valToNumber
   , newScene
-  , setIntensity
   , newPointLight
-  , position
-  , intensity
   , newMeshLambertMaterial
   , newMesh
   , newSphereGeometry
@@ -28,6 +25,7 @@ module API
   , domElement
   , appendInBody
   , render
+  , matrix4Elements
   ) where
 
 import Control.Monad
@@ -43,27 +41,19 @@ new' f name args = do
   v <- jsg ("THREE" :: JSString) ! name
   f <$> J.new v args
 
-valToXYZ :: JSVal -> JSM (Double, Double, Double)
-valToXYZ v = do
-  x <- fromJSValUnchecked =<< v ! "x"
-  y <- fromJSValUnchecked =<< v ! "y"
-  z <- fromJSValUnchecked =<< v ! "z"
-  pure (x, y, z)
-
 -------------------------------------------------------------------------------
 -- Object3D
 -------------------------------------------------------------------------------
 
-class Object3DC object where
-  add :: (Object3DC a, MakeArgs a) => object -> a -> JSM ()
-  -- position :: object -> JSM Vector3
+class Object3DC a where
+  add :: (Object3DC b, MakeArgs b) => a -> b -> JSM ()
+  getPosition :: a -> JSM Vector3
+  getMatrixWorld :: a -> JSM Matrix4
 
 instance Object3DC JSVal where
   add v x = void $ v # ("add" :: JSString) $ x
-  -- position v = fromJSValUnchecked =<< v ! "position"
-
-position :: (Object3DC a, MakeObject a) => (JSM JSVal -> Const (JSM JSVal) (JSM JSVal)) -> a -> Const (JSM JSVal) a
-position = js "position"
+  getPosition v = fromJSValUnchecked =<< v ! "position"
+  getMatrixWorld v = fromJSValUnchecked =<< v ! "matrixWorld"
 
 -------------------------------------------------------------------------------
 -- Scene
@@ -85,18 +75,13 @@ isScene v = fromJSValUnchecked =<< v ! ("isScene" :: JSString)
 
 class Object3DC a => LightC a where
   isLight :: a -> JSM Bool
-  -- intensity :: a -> JSM Double
+  getIntensity :: a -> JSM Double
+  setIntensity :: Double -> a -> JSM ()
 
 instance LightC JSVal where
   isLight v = fromJSValUnchecked =<< v ! ("isLight" :: JSString)
-  -- intensity v = fromJSValUnchecked =<< v ! ("intensity" :: JSString)
-
-intensity :: (LightC a, MakeObject a) => (JSM JSVal -> Const (JSM JSVal) (JSM JSVal)) -> a -> Const (JSM JSVal) a
-intensity = js "intensity"
-
--- TODO add a "LightC a" constraint
-setIntensity :: Double -> forall a. MakeObject a => IndexPreservingGetter a (JSM ())
-setIntensity = jss "intensity"
+  getIntensity v = fromJSValUnchecked =<< v ! ("intensity" :: JSString)
+  setIntensity x v = v ^. jss "intensity" x
 
 -------------------------------------------------------------------------------
 -- PointLight
@@ -214,7 +199,7 @@ domElement :: WebGLRenderer -> JSM JSVal
 domElement (WebGLRenderer v) = v ! "domElement"
 
 -------------------------------------------------------------------------------
--- helpers
+-- Vector3
 -------------------------------------------------------------------------------
 
 newtype Vector3 = Vector3 { unVector3 :: JSVal }
@@ -226,15 +211,31 @@ instance FromJSVal Vector3 where
 newVector3 :: Double -> Double -> Double -> JSM Vector3
 newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
 
--- TODO constraint to Vector3
-setZ :: Double -> forall a. MakeObject a => IndexPreservingGetter a (JSM ())
-setZ = jss "z"
+setZ :: Double -> Vector3 -> JSM ()
+setZ x (Vector3 v) = void $ v ^. jss "z" x
  
--- TODO constraint to Vector3
-setXYZ 
-  :: (MakeObject o, Conjoined p, Contravariant f, Functor f) 
-  => Double -> Double -> Double -> p (JSM JSVal) (f (JSM JSVal)) -> p o (f o)
-setXYZ x y z = js3 "set" x y z 
+setXYZ :: Double -> Double -> Double -> Vector3 -> JSM ()
+setXYZ x y z (Vector3 v) = void $ v ^. js3 "set" x y z
+
+vector3ToXYZ :: Vector3 -> JSM (Double, Double, Double)
+vector3ToXYZ (Vector3 v) = do
+  x <- fromJSValUnchecked =<< v ! "x"
+  y <- fromJSValUnchecked =<< v ! "y"
+  z <- fromJSValUnchecked =<< v ! "z"
+  pure (x, y, z)
+
+-------------------------------------------------------------------------------
+-- Matrix4
+-------------------------------------------------------------------------------
+
+newtype Matrix4 = Matrix4 { unMatrix4 :: JSVal }
+  deriving (MakeObject, ToJSVal, MakeArgs)
+
+instance FromJSVal Matrix4 where
+  fromJSVal = pure .Just . Matrix4
+
+matrix4Elements :: Matrix4 -> JSM [Double]
+matrix4Elements (Matrix4 v) = fromJSValUnchecked =<< v ! "elements"
 
 -------------------------------------------------------------------------------
 -- helpers
