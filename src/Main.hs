@@ -2,7 +2,11 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Lens
+import Control.Monad
+import Control.Lens hiding ((#))
+-- import Data.Foldable (traverse_)
+-- import Language.Javascript.JSaddle (valToNumber)
+import Language.Javascript.JSaddle  hiding (setProp, getProp)
 import Miso (consoleLog, run)
 import Miso.String (ms)
 
@@ -23,14 +27,25 @@ main = run $ do
   scene1 <- newScene 
 
   light1 <- newPointLight
-  light1 & setProp intensity 200
+  light1 & setProp intensity 400
+  -- light1 & setProp intensity' 200
   light1 & getProp position >>= setXYZ 8 8 8
+  -- light1 & getProp position' >>= traverse_ (setXYZ 8 8 8)
   add scene1 light1
 
-  geometry1 <- newSphereGeometry
   material1 <- newMeshLambertMaterial
+  geometry1 <- newSphereGeometry
   mesh1 <- newMesh geometry1 material1
+  mesh1 & getProp position >>= setXYZ (-1) 0 0
   add scene1 mesh1
+
+  texture2 <- newTextureLoader >>= load "miso.png"
+  material2 <- newMeshLambertMaterial
+  material2 & setProp textureMap' texture2
+  geometry2 <- newBoxGeometry
+  mesh2 <- newMesh geometry2 material2
+  mesh2 & getProp position >>= setXYZ 1 0 0
+  add scene1 mesh2
 
   camera1 <- newPerspectiveCamera 70 (winWidth / winHeight) 0.1 100
   camera1 & getProp position >>= setProp z_ 6 
@@ -40,13 +55,17 @@ main = run $ do
   domElement renderer1 >>= appendInBody 
   render renderer1 scene1 camera1
 
+
+  -- TODO animation (texture)
+  -- forever $ render renderer1 scene1 camera1
+
   -- tests
   light1 & getProp intensity >>= valToNumber >>= consoleLog . ms . show
+  -- light1 & getProp intensity' >>= traverse valToNumber >>= consoleLog . ms . show
   light1 & getProp position >>= vector3ToXYZ >>= consoleLog . ms . show
   camera1 & getProp position >>= vector3ToXYZ >>= consoleLog . ms . show
   light1 & getProp position >>= getProp z_ >>= valToNumber >>= consoleLog . ms . show
-  light1 & modifyProp intensity (pure . (*2)) >>= valToNumber >>= consoleLog . ms . show
-  light1 & getProp intensity >>= valToNumber >>= consoleLog . ms . show
+  -- light1 & modifyProp intensity (pure . (*2)) >>= valToNumber >>= consoleLog . ms . show
 
   -- check compile errors
   -- scene1 & getProp intensity >>= valToNumber >>= consoleLog . ms . show

@@ -9,7 +9,11 @@ const scene = new THREE.Scene();
 
 const geometry1 = new THREE.BoxGeometry(1, 1, 1);
 const texture1 = new THREE.TextureLoader().load('miso.png');
-const material1 = new THREE.MeshStandardMaterial({ map: texture1 });
+const material1 = new THREE.MeshLambertMaterial({ map: texture1 });
+// const material1 = new THREE.MeshStandardMaterial({ map: texture1 });
+// const material1 = new THREE.MeshStandardMaterial();
+// material1.map = texture1;
+// console.log(texture1.image);
 const mesh1 = new THREE.Mesh( geometry1, material1 );
 mesh1.position.set(1, 0, -1);
 scene.add( mesh1 );
@@ -56,7 +60,6 @@ const controls = new OrbitControls( camera, renderer.domElement );
 controls.update();
 
 // animation
-
 function animate( time ) {
 
 	mesh1.rotation.y = time / 1000;

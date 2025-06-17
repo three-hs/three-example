@@ -3,9 +3,13 @@
 -- JS to Haskell rules:
 -- - if a JS class can be inherited -> define a Haskell typeclass
 -- - if a JS class can be instanciated -> define a Haskell newtype
+--
+-- properties:
+-- - Prop / mkProp for mandatory properties
+-- - Prop' / mkProp' for optional properties
 -- 
 -- TODO:
--- - handle null value of a property (use a Maybe for the mkProp function?)
+-- - read-only properties?
 -- - constructors with optional parameters or parameter object
 -------------------------------------------------------------------------------
 
@@ -16,9 +20,16 @@
 module API 
   ( Object3DC(..)
 
+  , TextureLoader(..)
+  , newTextureLoader
+  , load
+
+  , Texture(..)
+
   , MaterialC(..)
   , MeshLambertMaterial(..)
   , newMeshLambertMaterial
+  , textureMap'
 
   , LightC(..)
   , PointLight(..)
@@ -32,6 +43,7 @@ module API
   , newVector3
   , vector3ToXYZ
   , setXYZ
+  , y_
   , z_
 
   , Mesh(..)
@@ -47,6 +59,9 @@ module API
   , SphereGeometry(..)
   , newSphereGeometry
 
+  , BoxGeometry(..)
+  , newBoxGeometry
+
   , WebGLRenderer(..)
   , newWebGLRenderer
   , render
@@ -60,12 +75,25 @@ module API
   , valToNumber
   , getProp
   , setProp
-  , modifyProp
+  -- , modifyProp
   ) where
 
 import Control.Monad
 import Control.Lens hiding ((#))
 import Language.Javascript.JSaddle as J hiding (getProp, setProp)
+
+-------------------------------------------------------------------------------
+-- helpers
+-------------------------------------------------------------------------------
+
+appendInBody :: JSVal -> JSM ()
+appendInBody v = void $ jsg "document" ^. js "body" ^. js1 "appendChild" v
+
+winInnerWidth :: JSM Double
+winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
+
+winInnerHeight :: JSM Double
+winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
 
 -------------------------------------------------------------------------------
 -- Internal
@@ -76,6 +104,34 @@ new' f name args = do
   v <- jsg ("THREE" :: JSString) ! name
   f <$> J.new v args
 
+getProp :: (a -> Maybe b -> JSM c) -> a -> JSM c
+getProp fProp v = fProp v Nothing
+
+setProp :: (a -> Maybe b -> JSM c) -> b -> a -> JSM ()
+setProp fProp x v = void $ fProp v (Just x)
+
+-- property
+type Prop a b = a -> Maybe b -> JSM b
+
+mkProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> Prop a b
+mkProp name v mx1 = do
+  x0 <- fromJSValUnchecked =<< v ! name
+  case mx1 of
+    Nothing -> pure x0
+    Just x1 -> v ^. jss name x1 >> pure x1
+
+-- optional property
+type Prop' a b = a -> Maybe b -> JSM (Maybe b)
+
+mkProp' :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> Prop' a b
+mkProp' name v mx1 = do
+  mx0 <- fromJSVal =<< v ! name
+  case mx1 of
+    Nothing -> pure mx0
+    Just x1 -> v ^. jss name x1 >> pure Nothing
+
+
+{-
 mkProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> a -> (b -> JSM b) -> JSM b
 mkProp name v f = do
     x0 <- fromJSValUnchecked =<< v ! name
@@ -91,6 +147,7 @@ setProp fProp x v = void $ fProp v (const $ pure x)
 
 modifyProp :: (a -> (b -> JSM b) -> JSM b) -> (b -> JSM b) -> a -> JSM b
 modifyProp fProp f v = fProp v f
+-}
 
 -------------------------------------------------------------------------------
 -- Object3D
@@ -98,11 +155,13 @@ modifyProp fProp f v = fProp v f
 
 class Object3DC a where
   add :: (Object3DC b, MakeArgs b) => a -> b -> JSM ()
-  position :: a -> (Vector3 -> JSM Vector3) -> JSM Vector3
+  position :: Prop a Vector3
+  -- position' :: Prop' a Vector3
 
 instance Object3DC JSVal where
   add v x = void $ v # ("add" :: JSString) $ x
   position = mkProp "position"
+  -- position' = mkProp' "position"
 
 -------------------------------------------------------------------------------
 -- Scene
@@ -124,11 +183,13 @@ isScene v = fromJSValUnchecked =<< v ! ("isScene" :: JSString)
 
 class Object3DC a => LightC a where
   isLight :: a -> JSM Bool
-  intensity :: a -> (Double -> JSM Double) -> JSM Double
+  intensity :: Prop a Double
+  -- intensity' :: Prop' a Double
 
 instance LightC JSVal where
   isLight v = fromJSValUnchecked =<< v ! ("isLight" :: JSString)
   intensity = mkProp "intensity"
+  -- intensity' = mkProp' "intensity"
 
 -------------------------------------------------------------------------------
 -- PointLight
@@ -163,6 +224,32 @@ newtype MeshLambertMaterial = MeshLambertMaterial { unMeshLambertMaterial :: JSV
 newMeshLambertMaterial :: JSM MeshLambertMaterial
 newMeshLambertMaterial = new' MeshLambertMaterial "MeshLambertMaterial" ()
 
+textureMap' :: Prop' MeshLambertMaterial Texture
+textureMap' = mkProp' "map"
+
+-------------------------------------------------------------------------------
+-- Texture
+-------------------------------------------------------------------------------
+
+newtype Texture = Texture { unTexture :: JSVal }
+  deriving (MakeArgs, MakeObject, ToJSVal) 
+
+instance FromJSVal Texture where
+  fromJSVal = pure .Just . Texture
+
+-------------------------------------------------------------------------------
+-- TextureLoader
+-------------------------------------------------------------------------------
+
+newtype TextureLoader = TextureLoader { unTextureLoader :: JSVal }
+  deriving (MakeArgs, MakeObject, ToJSVal) 
+
+newTextureLoader :: JSM TextureLoader
+newTextureLoader = new' TextureLoader "TextureLoader" ()
+
+load :: JSString -> TextureLoader -> JSM Texture
+load url (TextureLoader v) = Texture <$> (v # ("load" :: JSString) $ [url])
+
 -------------------------------------------------------------------------------
 -- BufferGeometry
 -------------------------------------------------------------------------------
@@ -187,6 +274,17 @@ newtype SphereGeometry = SphereGeometry { unSphereGeometry :: JSVal }
 
 newSphereGeometry :: JSM SphereGeometry
 newSphereGeometry = new' SphereGeometry "SphereGeometry" ()
+
+-------------------------------------------------------------------------------
+-- BoxGeometry
+-------------------------------------------------------------------------------
+
+newtype BoxGeometry = BoxGeometry { unBoxGeometry :: JSVal }
+  deriving (MakeArgs, MakeObject, ToJSVal) 
+  deriving newtype (BufferGeometryC)
+
+newBoxGeometry :: JSM BoxGeometry
+newBoxGeometry = new' BoxGeometry "BoxGeometry" ()
 
 -------------------------------------------------------------------------------
 -- Mesh
@@ -255,7 +353,10 @@ instance FromJSVal Vector3 where
 newVector3 :: Double -> Double -> Double -> JSM Vector3
 newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
 
-z_ :: Vector3 -> (Double -> JSM Double) -> JSM Double
+y_ :: Prop Vector3 Double
+y_ = mkProp "y"
+
+z_ :: Prop Vector3 Double
 z_ = mkProp "z"
 
 setXYZ :: Double -> Double -> Double -> Vector3 -> JSM ()
@@ -267,17 +368,4 @@ vector3ToXYZ (Vector3 v) = do
   y <- fromJSValUnchecked =<< v ! "y"
   z <- fromJSValUnchecked =<< v ! "z"
   pure (x, y, z)
-
--------------------------------------------------------------------------------
--- helpers
--------------------------------------------------------------------------------
-
-appendInBody :: JSVal -> JSM ()
-appendInBody v = void $ jsg "document" ^. js "body" ^. js1 "appendChild" v
-
-winInnerWidth :: JSM Double
-winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
-
-winInnerHeight :: JSM Double
-winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
 
