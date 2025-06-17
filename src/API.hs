@@ -5,27 +5,51 @@
 
 module API 
   ( Object3DC(..)
+
   , MaterialC(..)
+  , MeshLambertMaterial(..)
+  , newMeshLambertMaterial
+
   , LightC(..)
-  , PointLight
+  , PointLight(..)
+  , newPointLight
+
+  , CameraC
+  , PerspectiveCamera(..)
+  , newPerspectiveCamera
+
+  , Vector3(..)
+  , newVector3
+  , vector3ToXYZ
+  , setXYZ
+  , z_
+
+  , Mesh(..)
+  , newMesh
+
+  , Scene(..)
+  , newScene
+  , isScene
+
+  , BufferGeometryC(..)
+  , BufferGeometry(..)
+
+  , SphereGeometry(..)
+  , newSphereGeometry
+
+  , WebGLRenderer(..)
+  , newWebGLRenderer
+  , render
+  , domElement
+  , setSize
+
   , winInnerWidth
   , winInnerHeight
-  , vector3ToXYZ
-  , valToNumber
-  , newScene
-  , newPointLight
-  , newMeshLambertMaterial
-  , newMesh
-  , newSphereGeometry
-  , newPerspectiveCamera
-  , newWebGLRenderer
-  , setSize
-  , setXYZ
-  , setZ
-  , domElement
   , appendInBody
-  , render
-  , matrix4Elements
+
+  , valToNumber
+  , get_
+  , set_
   ) where
 
 import Control.Monad
@@ -41,19 +65,30 @@ new' f name args = do
   v <- jsg ("THREE" :: JSString) ! name
   f <$> J.new v args
 
+mkGetSet :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> a -> (b -> JSM b) -> JSM b
+mkGetSet name v f = do
+    x0 <- fromJSValUnchecked =<< v ! name
+    x1 <- f x0
+    v ^. jss name x1
+    pure x1
+
+get_ :: (t1 -> (a -> JSM a) -> t2) -> t1 -> t2
+get_ f v = f v pure
+
+set_ :: (p -> (b -> JSM a1) -> JSM a2) -> a1 -> p -> JSM ()
+set_ f x v = void $ f v (const $ pure x)
+
 -------------------------------------------------------------------------------
 -- Object3D
 -------------------------------------------------------------------------------
 
 class Object3DC a where
   add :: (Object3DC b, MakeArgs b) => a -> b -> JSM ()
-  getPosition :: a -> JSM Vector3
-  getMatrixWorld :: a -> JSM Matrix4
+  position :: a -> (Vector3 -> JSM Vector3) -> JSM Vector3
 
 instance Object3DC JSVal where
   add v x = void $ v # ("add" :: JSString) $ x
-  getPosition v = fromJSValUnchecked =<< v ! "position"
-  getMatrixWorld v = fromJSValUnchecked =<< v ! "matrixWorld"
+  position = mkGetSet "position"
 
 -------------------------------------------------------------------------------
 -- Scene
@@ -75,13 +110,11 @@ isScene v = fromJSValUnchecked =<< v ! ("isScene" :: JSString)
 
 class Object3DC a => LightC a where
   isLight :: a -> JSM Bool
-  getIntensity :: a -> JSM Double
-  setIntensity :: Double -> a -> JSM ()
+  intensity :: a -> (Double -> JSM Double) -> JSM Double
 
 instance LightC JSVal where
   isLight v = fromJSValUnchecked =<< v ! ("isLight" :: JSString)
-  getIntensity v = fromJSValUnchecked =<< v ! ("intensity" :: JSString)
-  setIntensity x v = v ^. jss "intensity" x
+  intensity = mkGetSet "intensity"
 
 -------------------------------------------------------------------------------
 -- PointLight
@@ -94,9 +127,6 @@ newtype PointLight = PointLight { unPointLight :: JSVal }
 
 newPointLight :: JSM PointLight
 newPointLight = new' PointLight "PointLight" ()
-
-distance :: PointLight -> JSM Double
-distance v = fromJSValUnchecked =<< v ! ("distance" :: JSString)
 
 -------------------------------------------------------------------------------
 -- Material
@@ -211,9 +241,9 @@ instance FromJSVal Vector3 where
 newVector3 :: Double -> Double -> Double -> JSM Vector3
 newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
 
-setZ :: Double -> Vector3 -> JSM ()
-setZ x (Vector3 v) = void $ v ^. jss "z" x
- 
+z_ :: Vector3 -> (Double -> JSM Double) -> JSM Double
+z_ = mkGetSet "z"
+
 setXYZ :: Double -> Double -> Double -> Vector3 -> JSM ()
 setXYZ x y z (Vector3 v) = void $ v ^. js3 "set" x y z
 
@@ -223,19 +253,6 @@ vector3ToXYZ (Vector3 v) = do
   y <- fromJSValUnchecked =<< v ! "y"
   z <- fromJSValUnchecked =<< v ! "z"
   pure (x, y, z)
-
--------------------------------------------------------------------------------
--- Matrix4
--------------------------------------------------------------------------------
-
-newtype Matrix4 = Matrix4 { unMatrix4 :: JSVal }
-  deriving (MakeObject, ToJSVal, MakeArgs)
-
-instance FromJSVal Matrix4 where
-  fromJSVal = pure .Just . Matrix4
-
-matrix4Elements :: Matrix4 -> JSM [Double]
-matrix4Elements (Matrix4 v) = fromJSValUnchecked =<< v ! "elements"
 
 -------------------------------------------------------------------------------
 -- helpers
@@ -249,5 +266,4 @@ winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
 
 winInnerHeight :: JSM Double
 winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
-
 

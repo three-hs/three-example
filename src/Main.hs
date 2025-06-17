@@ -23,8 +23,8 @@ main = run $ do
   scene1 <- newScene 
 
   light1 <- newPointLight
-  light1 & setIntensity 200
-  light1 & getPosition >>= setXYZ 8 8 8
+  light1 & set_ intensity 200
+  light1 & get_ position >>= setXYZ 8 8 8
   add scene1 light1
 
   geometry1 <- newSphereGeometry
@@ -33,7 +33,7 @@ main = run $ do
   add scene1 mesh1
 
   camera1 <- newPerspectiveCamera 70 (winWidth / winHeight) 0.1 100
-  camera1 & getPosition >>= setZ 6 
+  camera1 & get_ position >>= set_ z_ 6 
 
   renderer1 <- newWebGLRenderer
   setSize renderer1 winWidthI winHeightI True
@@ -41,11 +41,10 @@ main = run $ do
   render renderer1 scene1 camera1
 
   -- tests
-  getIntensity light1 >>= valToNumber >>= consoleLog . ms . show
-  getPosition light1 >>= vector3ToXYZ >>= consoleLog . ms . show
-  camera1 & getPosition >>= vector3ToXYZ >>= consoleLog . ms . show
-  light1 & getMatrixWorld >>= matrix4Elements >>= consoleLog . ms . show
-  camera1 & getMatrixWorld >>= matrix4Elements >>= consoleLog . ms . show
+  light1 & get_ intensity >>= valToNumber >>= consoleLog . ms . show
+  light1 & get_ position >>= vector3ToXYZ >>= consoleLog . ms . show
+  camera1 & get_ position >>= vector3ToXYZ >>= consoleLog . ms . show
+  -- scene1 & get_ intensity >>= valToNumber >>= consoleLog . ms . show   -- should not compile
 
   pure ()
 
