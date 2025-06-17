@@ -83,13 +83,13 @@ mkProp name v f = do
     v ^. jss name x1
     pure x1
 
-getProp :: (t1 -> (a -> JSM a) -> t2) -> t1 -> t2
+getProp :: (a -> (b -> JSM b) -> JSM b) -> a -> JSM b
 getProp fProp v = fProp v pure
 
-setProp :: (p -> (b -> JSM a1) -> JSM a2) -> a1 -> p -> JSM ()
+setProp :: (a -> (b -> JSM b) -> JSM b) -> b -> a -> JSM ()
 setProp fProp x v = void $ fProp v (const $ pure x)
 
-modifyProp :: (p -> (b -> JSM a2) -> JSM a2) -> (b -> JSM a2) -> p -> JSM a2
+modifyProp :: (a -> (b -> JSM b) -> JSM b) -> (b -> JSM b) -> a -> JSM b
 modifyProp fProp f v = fProp v f
 
 -------------------------------------------------------------------------------
