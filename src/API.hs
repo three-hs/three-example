@@ -50,6 +50,7 @@ module API
   , valToNumber
   , get_
   , set_
+  , modify_
   ) where
 
 import Control.Monad
@@ -73,10 +74,13 @@ mkGetSet name v f = do
     pure x1
 
 get_ :: (t1 -> (a -> JSM a) -> t2) -> t1 -> t2
-get_ f v = f v pure
+get_ fProp v = fProp v pure
 
 set_ :: (p -> (b -> JSM a1) -> JSM a2) -> a1 -> p -> JSM ()
-set_ f x v = void $ f v (const $ pure x)
+set_ fProp x v = void $ fProp v (const $ pure x)
+
+modify_ :: (p -> (b -> JSM a2) -> JSM a2) -> (b -> JSM a2) -> p -> JSM a2
+modify_ fProp f v = fProp v f
 
 -------------------------------------------------------------------------------
 -- Object3D
