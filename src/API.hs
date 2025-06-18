@@ -5,13 +5,12 @@
 -- - if a JS class can be instanciated -> define a Haskell newtype
 --
 -- properties:
--- - Prop / mkProp for mandatory properties
+-- - Prop / mkProp for properties
 -- - OptProp / mkOptProp for optional properties
 -- - Ro / mkRo for read-only properties
 -- 
 -- TODO:
 -- - constructors with optional parameters or parameter object
--- - callback functions
 -------------------------------------------------------------------------------
 
 {-# LANGUAGE DerivingVia #-}
@@ -72,6 +71,7 @@ module API
   , render
   , domElement
   , setSize
+  , setAnimationLoop
 
   , winInnerWidth
   , winInnerHeight
@@ -110,6 +110,27 @@ new' f name args = do
   v <- jsg ("THREE" :: JSString) ! name
   f <$> J.new v args
 
+-- define/construct a property
+type Prop a b = a -> Maybe b -> JSM b
+
+mkProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> Prop a b
+mkProp name v mx1 = do
+  x0 <- fromJSValUnchecked =<< v ! name
+  case mx1 of
+    Nothing -> pure x0
+    Just x1 -> v ^. jss name x1 >> pure x1
+
+-- define/construct an optional property
+type OptProp a b = a -> Maybe b -> JSM (Maybe b)
+
+mkOptProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> OptProp a b
+mkOptProp name v mx1 = do
+  mx0 <- fromJSVal =<< v ! name
+  case mx1 of
+    Nothing -> pure mx0
+    Just x1 -> v ^. jss name x1 >> pure Nothing
+
+-- get/set/modify a property or an optional property
 getProp :: (a -> Maybe b -> JSM c) -> a -> JSM c
 getProp prop v = prop v Nothing
 
@@ -125,33 +146,11 @@ modifyProp prop f v = do
 modifyOptProp :: OptProp a b -> (b -> JSM b) -> a -> JSM ()
 modifyOptProp prop f v = do
   mx <- getProp prop v
-  case mx of
-    Nothing -> pure ()
-    Just x -> do
-      y <- f x
-      setProp prop y v
+  forM_ mx $ \x -> do
+    y <- f x
+    setProp prop y v
 
--- property
-type Prop a b = a -> Maybe b -> JSM b
-
-mkProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> Prop a b
-mkProp name v mx1 = do
-  x0 <- fromJSValUnchecked =<< v ! name
-  case mx1 of
-    Nothing -> pure x0
-    Just x1 -> v ^. jss name x1 >> pure x1
-
--- optional property
-type OptProp a b = a -> Maybe b -> JSM (Maybe b)
-
-mkOptProp :: (MakeObject a, FromJSVal b, ToJSVal b) => JSString -> OptProp a b
-mkOptProp name v mx1 = do
-  mx0 <- fromJSVal =<< v ! name
-  case mx1 of
-    Nothing -> pure mx0
-    Just x1 -> v ^. jss name x1 >> pure Nothing
-
--- read-only property
+-- read-only property (can be read directly)
 type Ro a b = a -> JSM b
 
 mkRo :: (MakeObject a, FromJSVal b) => JSString -> Ro a b
@@ -169,10 +168,8 @@ class Object3DC a where
   add :: (Object3DC b, MakeArgs b) => a -> b -> JSM ()
 
 instance Object3DC JSVal where
-  -- properties
   positionProp = mkProp "position"
   rotationProp = mkProp "rotation"
-  -- methods
   add v x = void $ v # ("add" :: JSString) $ x
 
 -------------------------------------------------------------------------------
@@ -186,6 +183,7 @@ newtype Scene = Scene { unScene :: JSVal }
 newScene :: JSM Scene
 newScene = new' Scene "Scene" ()
 
+-- read-only properties
 isSceneRo :: Ro Scene Bool
 isSceneRo = mkRo "isScene"
 
@@ -194,7 +192,9 @@ isSceneRo = mkRo "isScene"
 -------------------------------------------------------------------------------
 
 class Object3DC a => LightC a where
+-- read-only properties
   isLightRo :: a -> JSM Bool
+  -- properties
   intensityProp :: Prop a Double
 
 instance LightC JSVal where
@@ -234,6 +234,7 @@ newtype MeshLambertMaterial = MeshLambertMaterial { unMeshLambertMaterial :: JSV
 newMeshLambertMaterial :: JSM MeshLambertMaterial
 newMeshLambertMaterial = new' MeshLambertMaterial "MeshLambertMaterial" ()
 
+-- optional properties
 mapOptProp :: OptProp MeshLambertMaterial Texture
 mapOptProp = mkOptProp "map"
 
@@ -257,6 +258,7 @@ newtype TextureLoader = TextureLoader { unTextureLoader :: JSVal }
 newTextureLoader :: JSM TextureLoader
 newTextureLoader = new' TextureLoader "TextureLoader" ()
 
+-- methods
 load :: JSString -> TextureLoader -> JSM Texture
 load url (TextureLoader v) = Texture <$> (v # ("load" :: JSString) $ [url])
 
@@ -265,6 +267,7 @@ load url (TextureLoader v) = Texture <$> (v # ("load" :: JSString) $ [url])
 -------------------------------------------------------------------------------
 
 class BufferGeometryC a where
+  -- read-only properties
   isBufferGeometryRo :: Ro a Bool
 
 instance BufferGeometryC JSVal where
@@ -312,6 +315,7 @@ newMesh geometry' material' = new' Mesh "Mesh" (geometry', material')
 -------------------------------------------------------------------------------
 
 class Object3DC a => CameraC a where
+  -- read-only properties
   isCameraRo :: Ro a Bool
 
 instance CameraC JSVal where
@@ -343,7 +347,8 @@ newWebGLRenderer = new' WebGLRenderer "WebGLRenderer" ()
 setSize :: WebGLRenderer -> Int -> Int -> Bool -> JSM ()
 setSize (WebGLRenderer v) width height updateStyle = void $ v # ("setSize" :: JSString) $ (width, height, updateStyle)
 
--- TODO setAnimationLoop
+setAnimationLoop :: WebGLRenderer -> JSCallAsFunction -> JSM ()
+setAnimationLoop (WebGLRenderer v) f = void $  v # "setAnimationLoop" $ f
 
 render :: (ToJSVal a, Object3DC a, ToJSVal b, CameraC b) => WebGLRenderer -> a -> b -> JSM ()
 render (WebGLRenderer v) object camera = void $ v # ("render" :: JSString) $ (object, camera)
@@ -362,6 +367,7 @@ newtype Euler = Euler { unEuler :: JSVal }
 instance FromJSVal Euler where
   fromJSVal = pure .Just . Euler
 
+-- properties
 yRotProp :: Prop Euler Double
 yRotProp = mkProp "y"
 
@@ -378,15 +384,13 @@ instance FromJSVal Vector3 where
 newVector3 :: Double -> Double -> Double -> JSM Vector3
 newVector3 x y z = new' Vector3 "Vector3" (x, y, z)
 
-xProp :: Prop Vector3 Double
+-- properties
+xProp, yProp, zProp :: Prop Vector3 Double
 xProp = mkProp "x"
-
-yProp :: Prop Vector3 Double
 yProp = mkProp "y"
-
-zProp :: Prop Vector3 Double
 zProp = mkProp "z"
 
+-- methods
 setXYZ :: Double -> Double -> Double -> Vector3 -> JSM ()
 setXYZ x y z (Vector3 v) = void $ v ^. js3 "set" x y z
 
