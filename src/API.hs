@@ -11,6 +11,8 @@
 -- 
 -- TODO:
 -- - constructors with optional parameters or parameter object
+--      -- cps: https://hackage-content.haskell.org/package/jsaddle-0.9.9.3/docs/Language-Javascript-JSaddle-Object.html#g:5
+--      -- type + def value
 -------------------------------------------------------------------------------
 
 {-# LANGUAGE DerivingVia #-}
