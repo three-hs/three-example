@@ -50,7 +50,7 @@ main = run $ do
 
   texture2 <- THREE.TextureLoader.new >>= load "miso.png"
   material2 <- THREE.MeshLambertMaterial.new
-  material2 & setMat texture2
+  material2 & setMatOpt (Just texture2)
   geometry2 <- THREE.BoxGeometry.new
   mesh2 <- THREE.Mesh.new geometry2 material2
   mesh2 & getPosition >>= setXYZ 1 0 0
@@ -71,7 +71,6 @@ main = run $ do
 
 
   -- tests
-  light1 & isLight >>= consoleLog . ms . show
   _ <- light1 & modifyIntensity (pure . (*2)) 
   light1 & getIntensity >>= valToNumber >>= consoleLog . ms . show
   light1 & getPosition >>= vector3ToXYZ >>= consoleLog . ms . show
