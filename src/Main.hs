@@ -51,6 +51,7 @@ main = run $ do
   texture2 <- THREE.TextureLoader.new >>= load "miso.png"
   material2 <- THREE.MeshLambertMaterial.new
   material2 & setMatOpt (Just texture2)
+  -- material2 & setMatOpt Nothing
   geometry2 <- THREE.BoxGeometry.new
   mesh2 <- THREE.Mesh.new geometry2 material2
   mesh2 & getPosition >>= setXYZ 1 0 0
