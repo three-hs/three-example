@@ -38,7 +38,7 @@ main = run $ do
 
   light1 <- THREE.PointLight.new
   light1 & intensity .= 300
-  light1 ^. position >>= setXYZ 8 8 8
+  light1 ^. position !.. setXYZ 8 8 8
   add scene1 light1
 
   material1 <- THREE.MeshLambertMaterial.new
@@ -52,14 +52,8 @@ main = run $ do
   material2 & THREE.MeshLambertMaterial.map .= Just texture2
   geometry2 <- THREE.BoxGeometry.new
   mesh2 <- THREE.Mesh.new geometry2 material2
-  -----------------------------------------------------------------------------
-  mesh2 ^. position !... setXYZ 1 0 0
-  -- (mesh2 ^. position) & setXYZ 1 0 0
-  pos <- mesh2 ^. position
-  pos & setXYZ 1 0 0
-
+  (mesh2 ^. position) !.. setXYZ 1 0 0 
   add scene1 mesh2
-  -----------------------------------------------------------------------------
 
   camera1 <- THREE.PerspectiveCamera.new 70 (winWidth / winHeight) 0.1 100
   camera1 & position !. z .= 6
