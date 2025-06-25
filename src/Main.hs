@@ -75,5 +75,5 @@ main = run $ do
   light1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
   light1 ^. isLight >>= consoleLog . ms . show
   camera1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
-  light1 ^. position >>= (^. z) >>= valToNumber >>= consoleLog . ms . show
+  light1 ^. position !. z >>= valToNumber >>= consoleLog . ms . show
 
