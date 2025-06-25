@@ -1,13 +1,14 @@
-# miso-three-test
+# three-test
 
 ⚠️⚠️⚠️ Work In Progress ⚠️⚠️⚠️
 
-Sample web app for testing [threejs](https://threejs.org/), in Haskell, using [Miso](https://haskell-miso.org/).
+Sample web app for testing [three.hs](https://github.com/three-hs/three.hs)
+(Haskell bindings to the three.js JavaScript library).
 
 
 ## Try online
 
-- TODO [https://juliendehos.github.io/miso-three-test/](https://juliendehos.github.io/miso-three-test/)
+- [https://juliendehos.github.io/three-test/](https://juliendehos.github.io/three-test/)
 
 
 ## Build and run
@@ -19,17 +20,4 @@ nix develop
 make
 make serve
 ```
-
-## Reference
-
-- https://github.com/mrdoob/three.js
-- https://threejs.org/docs/
-- https://github.com/ghcjs/jsaddle
-- https://hackage-content.haskell.org/package/jsaddle-0.9.9.3/docs/doc-index-All.html
-
-- https://r3f.docs.pmnd.rs/getting-started/introduction
-- https://threejs.org/manual/#en/installation
-- https://threejs.org/docs/
-- https://github.com/mrdoob/three.js
-- https://github.com/fireship-io/threejs-scroll-animation-demo/blob/main/main.js
 
