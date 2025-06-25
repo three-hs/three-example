@@ -1,14 +1,15 @@
-
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
+module Main where
+
 import Data.Function ((&))
-import Language.Javascript.JSaddle (valToNumber)
 import Miso (consoleLog, run)
 import Miso.String (ms)
 
+import API
 import THREE.BoxGeometry
-import THREE.Euler
+import THREE.Internal
 import THREE.Light
 import THREE.Mesh
 import THREE.MeshLambertMaterial
@@ -20,8 +21,6 @@ import THREE.SphereGeometry
 import THREE.TextureLoader
 import THREE.Vector3
 import THREE.WebGLRenderer
-
-import API
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
@@ -38,43 +37,49 @@ main = run $ do
   scene1 <- THREE.Scene.new 
 
   light1 <- THREE.PointLight.new
-  light1 & setIntensity 300
-  light1 & getPosition >>= setXYZ 8 8 8
+  light1 & intensity .= 300
+  light1 ^. position >>= setXYZ 8 8 8
   add scene1 light1
 
   material1 <- THREE.MeshLambertMaterial.new
   geometry1 <- THREE.SphereGeometry.new
   mesh1 <- THREE.Mesh.new geometry1 material1
-  mesh1 & getPosition >>= setXYZ (-1) 0 0
+  mesh1 & position !. x .= (-1)
   add scene1 mesh1
 
   texture2 <- THREE.TextureLoader.new >>= load "miso.png"
   material2 <- THREE.MeshLambertMaterial.new
-  material2 & setMatOpt (Just texture2)
-  -- material2 & setMatOpt Nothing
+  material2 & THREE.MeshLambertMaterial.map .= Just texture2
   geometry2 <- THREE.BoxGeometry.new
   mesh2 <- THREE.Mesh.new geometry2 material2
-  mesh2 & getPosition >>= setXYZ 1 0 0
+  -----------------------------------------------------------------------------
+  mesh2 ^. position !... setXYZ 1 0 0
+  -- (mesh2 ^. position) & setXYZ 1 0 0
+  pos <- mesh2 ^. position
+  pos & setXYZ 1 0 0
+
   add scene1 mesh2
+  -----------------------------------------------------------------------------
 
   camera1 <- THREE.PerspectiveCamera.new 70 (winWidth / winHeight) 0.1 100
-  camera1 & getPosition >>= THREE.Vector3.setZ 6 
+  camera1 & position !. z .= 6
 
   renderer1 <- THREE.WebGLRenderer.new
   setSize renderer1 winWidthI winHeightI True
 
   setAnimationLoop renderer1 $ \_ _ [valTime] -> do
     time <- valToNumber valTime
-    mesh2 & getRotation >>= THREE.Euler.setY (time/1000)
+    mesh2 & rotation !. y .= (time/1000)
     render renderer1 scene1 camera1
 
   domElement renderer1 >>= appendInBody 
 
-
   -- tests
-  _ <- light1 & modifyIntensity (pure . (*2)) 
-  light1 & getIntensity >>= valToNumber >>= consoleLog . ms . show
-  light1 & getPosition >>= vector3ToXYZ >>= consoleLog . ms . show
-  camera1 & getPosition >>= vector3ToXYZ >>= consoleLog . ms . show
-  light1 & getPosition >>= THREE.Vector3.getZ >>= valToNumber >>= consoleLog . ms . show
+  light1 & intensity *= 2
+  light1 & intensity %= (*2)
+  light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
+  light1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
+  light1 ^. isLight >>= consoleLog . ms . show
+  camera1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
+  light1 ^. position >>= (^. z) >>= valToNumber >>= consoleLog . ms . show
 

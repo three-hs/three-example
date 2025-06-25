@@ -1,11 +1,16 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module API where
+module API 
+  ( appendInBody
+  , winInnerWidth
+  , winInnerHeight
+  , valToNumber
+  ) where
 
 import Control.Monad
 import Control.Lens hiding ((#))
-import Language.Javascript.JSaddle as J hiding (getProp, setProp)
+import Language.Javascript.JSaddle
 
 appendInBody :: JSVal -> JSM ()
 appendInBody v = void $ jsg "document" ^. js "body" ^. js1 "appendChild" v
