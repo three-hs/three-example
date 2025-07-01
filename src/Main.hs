@@ -1,8 +1,6 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-
-{-# LANGUAGE TypeApplications           #-}
-{-# LANGUAGE DataKinds                  #-}
 
 module Main where
 
@@ -35,6 +33,9 @@ foreign export javascript "hs_start" main :: IO ()
 instance FromJSVal Scene where
   fromJSVal = pure . Just . Scene
 
+instance FromJSVal PointLight where
+  fromJSVal = pure . Just . PointLight
+
 main :: IO ()
 main = run $ do
 
@@ -63,6 +64,7 @@ main = run $ do
   (mesh2 ^. position) !.. setXYZ 1 0 0 
 
   traverse_ (`add` scene1) [mesh1, mesh2]
+  -- scene1 & add mesh1 >>= add mesh2
 
   camera1 <- THREE.PerspectiveCamera.new 70 (winWidth / winHeight) 0.1 100
   camera1 & position !. z .= 6
@@ -89,13 +91,13 @@ main = run $ do
   camera1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
   light1 ^. position !. z >>= valToNumber >>= consoleLog . ms . show
 
-  {-
   light2 <- THREE.PointLight.new
-  light2 & copy light1
-  -- light2 & copy mesh1
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  -}
+  light2 & copy (light1, True)
+  -- light2 & copy (mesh1, True)
+  light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
+  light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
 
   pure ()
 
