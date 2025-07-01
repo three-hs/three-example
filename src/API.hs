@@ -20,4 +20,3 @@ winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
 
 winInnerHeight :: JSM Double
 winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
-
