@@ -30,12 +30,6 @@ import Language.Javascript.JSaddle
 foreign export javascript "hs_start" main :: IO ()
 #endif
 
-instance FromJSVal Scene where
-  fromJSVal = pure . Just . Scene
-
-instance FromJSVal PointLight where
-  fromJSVal = pure . Just . PointLight
-
 main :: IO ()
 main = run $ do
 
@@ -53,29 +47,31 @@ main = run $ do
 
   material1 <- THREE.MeshLambertMaterial.new
   geometry1 <- THREE.SphereGeometry.new
-  mesh1 <- THREE.Mesh.new geometry1 material1
+  mesh1 <- THREE.Mesh.new (geometry1, material1)
   mesh1 & position !. x .= (-1)
 
   texture2 <- THREE.TextureLoader.new >>= load "miso.png"
   material2 <- THREE.MeshLambertMaterial.new
   material2 & THREE.MeshLambertMaterial.map .= Just texture2
-  geometry2 <- THREE.BoxGeometry.new
-  mesh2 <- THREE.Mesh.new geometry2 material2
+  geometry2 <- THREE.BoxGeometry.new (1, 1, 1, Just 1, Just 1, Just 1)
+  -- geometry2 <- THREE.BoxGeometry.new (1, 1, 1, Nothing, Nothing, Nothing)
+  mesh2 <- THREE.Mesh.new (geometry2, material2)
   (mesh2 ^. position) !.. setXYZ 1 0 0 
 
   traverse_ (`add` scene1) [mesh1, mesh2]
   -- scene1 & add mesh1 >>= add mesh2
 
-  camera1 <- THREE.PerspectiveCamera.new 70 (winWidth / winHeight) 0.1 100
+  camera1 <- THREE.PerspectiveCamera.new (70, winWidth / winHeight, 0.1, 100)
   camera1 & position !. z .= 6
 
   renderer1 <- THREE.WebGLRenderer.new
-  setSize renderer1 winWidthI winHeightI True
+  renderer1 & setSize (winWidthI, winHeightI, True)
 
-  setAnimationLoop renderer1 $ \_ _ [valTime] -> do
+  renderer1 & setAnimationLoop (\_ _ [valTime] -> do
     time <- valToNumber valTime
     mesh2 & rotation !. y .= (time/1000)
-    render renderer1 scene1 camera1
+    renderer1 & render (scene1, camera1)
+    )
 
   domElement renderer1 >>= appendInBody 
 
@@ -94,7 +90,7 @@ main = run $ do
   light2 <- THREE.PointLight.new
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  light2 & copy (light1, True)
+  -- TODO light2 & copy (light1, True)
   -- light2 & copy (mesh1, True)
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
