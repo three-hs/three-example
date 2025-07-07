@@ -1,14 +1,14 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module API 
+module FFI 
   ( appendInBody
   , winInnerWidth
   , winInnerHeight
   , valToNumber
   ) where
 
-import Control.Monad
+import Control.Monad (void)
 import Control.Lens hiding ((#))
 import Language.Javascript.JSaddle
 

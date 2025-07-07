@@ -1,5 +1,5 @@
 
-.PHONY= update build optim serve play
+.PHONY= update build optim serve
 
 all: update build optim
 
@@ -20,9 +20,6 @@ optim:
 
 serve:
 	http-server public
-
-play:
-	http-server playground
 
 clean:
 	rm -rf dist-newstyle public
