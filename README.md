@@ -1,6 +1,6 @@
 # three-test
 
-Minimal example of [three.hs](https://github.com/three-hs/three.hs) (Haskell
+Minimal example using [three.hs](https://github.com/three-hs/three.hs) (Haskell
 bindings to the three.js JavaScript library).
 
 
