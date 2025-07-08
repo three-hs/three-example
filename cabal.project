@@ -6,7 +6,8 @@ allow-newer:
 
 source-repository-package
   type: git
-  location: https://github.com/three-hs/three.hs
-  branch: master
-  -- tag: 5ca131c
+  -- location: https://github.com/three-hs/three.hs
+  location: https://github.com/juliendehos/three.hs
+  -- branch: master
+  tag: 2a24cc6
 

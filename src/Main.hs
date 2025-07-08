@@ -14,6 +14,7 @@ import THREE.Light
 import THREE.Mesh
 import THREE.MeshLambertMaterial
 import THREE.Object3D
+import THREE.OrbitControls
 import THREE.PerspectiveCamera
 import THREE.PointLight
 import THREE.Scene
@@ -72,4 +73,7 @@ main = run $ do
 
   canvas <- renderer1 ^. domElement
   appendInBody canvas
+
+  controls1 <- THREE.OrbitControls.new (camera1, canvas)
+  void $ controls1 & update ()
 
