@@ -5,10 +5,9 @@ version:                0.2
 executable app
   hs-source-dirs:       src
   main-is:              Main.hs
-  other-modules:        FFI Run
-  build-depends:        base, jsaddle, jsaddle-wasm, lens, three
+  other-modules:        FFI 
+  build-depends:        base, jsaddle, jsaddle-run, lens, three
   default-language:     GHC2021
   ghc-options:          -Wall -Wno-type-defaults -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start" -ddump-splices
   cpp-options:          -DWASM
-  default-extensions:   CPP TemplateHaskell
 

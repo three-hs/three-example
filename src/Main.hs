@@ -1,12 +1,14 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports #-}
 
 module Main where
 
 import Control.Monad (void)
 import Data.Function ((&))
 import Data.Foldable (traverse_)
+import "jsaddle-run" Language.Javascript.JSaddle.Run (run)
 
 import THREE.BoxGeometry
 import THREE.Internal
@@ -24,7 +26,6 @@ import THREE.Vector3
 import THREE.WebGLRenderer
 
 import FFI
-import Run
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
