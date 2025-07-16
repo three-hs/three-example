@@ -4,18 +4,18 @@
 
 module Main where
 
+import Control.Monad (void)
 import Data.Function ((&))
 import Data.Foldable (traverse_)
-import Miso (consoleLog, run)
-import Miso.String (ms)
+import Language.Javascript.JSaddle.Runner (run)
 
-import API
 import THREE.BoxGeometry
 import THREE.Internal
 import THREE.Light
 import THREE.Mesh
 import THREE.MeshLambertMaterial
 import THREE.Object3D
+import THREE.OrbitControls
 import THREE.PerspectiveCamera
 import THREE.PointLight
 import THREE.Scene
@@ -24,14 +24,11 @@ import THREE.TextureLoader
 import THREE.Vector3
 import THREE.WebGLRenderer
 
-import Language.Javascript.JSaddle
+import FFI
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
 #endif
-
-instance FromJSVal PointLight where
-  fromJSVal = pure . Just . PointLight
 
 main :: IO ()
 main = run $ do
@@ -46,7 +43,7 @@ main = run $ do
   light1 <- THREE.PointLight.new ()
   light1 & intensity .= 300
   light1 ^. position !.. setXYZ 8 8 8
-  scene1 & add light1
+  void $ scene1 & add light1
 
   material1 <- THREE.MeshLambertMaterial.new
   geometry1 <- THREE.SphereGeometry.new
@@ -57,7 +54,7 @@ main = run $ do
   material2 <- THREE.MeshLambertMaterial.new
   material2 & THREE.MeshLambertMaterial.map .= Just texture2
   geometry2 <- THREE.BoxGeometry.new (1, 1, 1)
-  -- geometry2 <- THREE.BoxGeometry.new (1, 1, 1, Nothing, Nothing, Nothing)
+  -- geometry2 <- THREE.BoxGeometry.new ()
   mesh2 <- THREE.Mesh.new (geometry2, material2)
   (mesh2 ^. position) !.. setXYZ 1 0 0 
 
@@ -79,27 +76,30 @@ main = run $ do
   canvas <- renderer1 ^. domElement
   appendInBody canvas
 
+  controls1 <- THREE.OrbitControls.new (camera1, canvas)
+  void $ controls1 & update ()
+
 
   -----------------------------------------------------------------------------
   -- tests
   -----------------------------------------------------------------------------
 
   light1 & intensity *= 2
-  light1 & intensity %= (*2)
-  light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  light1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
-  light1 ^. isLight >>= consoleLog . ms . show
-  camera1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
-  light1 ^. position !. z >>= valToNumber >>= consoleLog . ms . show
+  light1 & intensity %= (*0.5)
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light1 ^. position >>= vector3ToXYZ >>= consoleLog . show
+  light1 ^. isLight >>= consoleLog . show
+  camera1 ^. position >>= vector3ToXYZ >>= consoleLog . show
+  light1 ^. position !. z >>= valToNumber >>= consoleLog . show
 
   light2 <- THREE.PointLight.new ()
-  light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  light2 & copy (light1, True)
-  light2 & copy light1
-  -- light2 & copy (mesh1, True)  -- should not compile
-  light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light2 ^. intensity >>= valToNumber >>= consoleLog . show
+  void $ light2 & copy (light1, True)
+  void $ light2 & copy light1
+  -- void $ light2 & copy mesh1  -- should not compile
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light2 ^. intensity >>= valToNumber >>= consoleLog . show
 
   pure ()
 

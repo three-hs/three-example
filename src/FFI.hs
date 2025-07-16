@@ -1,11 +1,11 @@
-
 {-# LANGUAGE OverloadedStrings #-}
 
-module API 
+module FFI 
   ( appendInBody
+  , consoleLog
+  , valToNumber
   , winInnerWidth
   , winInnerHeight
-  , valToNumber
   ) where
 
 import Control.Monad
@@ -15,8 +15,13 @@ import Language.Javascript.JSaddle
 appendInBody :: JSVal -> JSM ()
 appendInBody v = void $ jsg "document" ^. js "body" ^. js1 "appendChild" v
 
+consoleLog :: String -> JSM ()
+consoleLog v = do
+  void $ jsg "console" # "log" $ [v]
+
 winInnerWidth :: JSM Double
 winInnerWidth = valToNumber =<< jsg "window"  ^. js "innerWidth"
 
 winInnerHeight :: JSM Double
 winInnerHeight = valToNumber =<< jsg "window"  ^. js "innerHeight"
+
