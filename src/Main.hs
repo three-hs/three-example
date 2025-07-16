@@ -30,6 +30,9 @@ import Language.Javascript.JSaddle
 foreign export javascript "hs_start" main :: IO ()
 #endif
 
+instance FromJSVal PointLight where
+  fromJSVal = pure . Just . PointLight
+
 main :: IO ()
 main = run $ do
 
@@ -40,7 +43,7 @@ main = run $ do
 
   scene1 <- THREE.Scene.new 
 
-  light1 <- THREE.PointLight.new
+  light1 <- THREE.PointLight.new ()
   light1 & intensity .= 300
   light1 ^. position !.. setXYZ 8 8 8
   scene1 & add light1
@@ -53,7 +56,7 @@ main = run $ do
   texture2 <- THREE.TextureLoader.new >>= load "miso.png"
   material2 <- THREE.MeshLambertMaterial.new
   material2 & THREE.MeshLambertMaterial.map .= Just texture2
-  geometry2 <- THREE.BoxGeometry.new (1, 1, 1, Just 1, Just 1, Just 1)
+  geometry2 <- THREE.BoxGeometry.new (1, 1, 1)
   -- geometry2 <- THREE.BoxGeometry.new (1, 1, 1, Nothing, Nothing, Nothing)
   mesh2 <- THREE.Mesh.new (geometry2, material2)
   (mesh2 ^. position) !.. setXYZ 1 0 0 
@@ -64,7 +67,7 @@ main = run $ do
   camera1 <- THREE.PerspectiveCamera.new (70, winWidth / winHeight, 0.1, 100)
   camera1 & position !. z .= 6
 
-  renderer1 <- THREE.WebGLRenderer.new
+  renderer1 <- THREE.WebGLRenderer.new Nothing
   renderer1 & setSize (winWidthI, winHeightI, True)
 
   renderer1 & setAnimationLoop (\_ _ [valTime] -> do
@@ -73,7 +76,9 @@ main = run $ do
     renderer1 & render (scene1, camera1)
     )
 
-  domElement renderer1 >>= appendInBody 
+  canvas <- renderer1 ^. domElement
+  appendInBody canvas
+
 
   -----------------------------------------------------------------------------
   -- tests
@@ -87,11 +92,12 @@ main = run $ do
   camera1 ^. position >>= vector3ToXYZ >>= consoleLog . ms . show
   light1 ^. position !. z >>= valToNumber >>= consoleLog . ms . show
 
-  light2 <- THREE.PointLight.new
+  light2 <- THREE.PointLight.new ()
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
-  -- TODO light2 & copy (light1, True)
-  -- light2 & copy (mesh1, True)
+  light2 & copy (light1, True)
+  light2 & copy light1
+  -- light2 & copy (mesh1, True)  -- should not compile
   light1 ^. intensity >>= valToNumber >>= consoleLog . ms . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . ms . show
 
