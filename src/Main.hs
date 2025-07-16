@@ -1,14 +1,13 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PackageImports #-}
 
 module Main where
 
 import Control.Monad (void)
 import Data.Function ((&))
 import Data.Foldable (traverse_)
-import "jsaddle-run" Language.Javascript.JSaddle.Run (run)
+import Language.Javascript.JSaddle.Runner (run)
 
 import THREE.BoxGeometry
 import THREE.Internal
@@ -41,7 +40,7 @@ main = run $ do
 
   scene1 <- THREE.Scene.new 
 
-  light1 <- THREE.PointLight.new
+  light1 <- THREE.PointLight.new ()
   light1 & intensity .= 300
   light1 ^. position !.. setXYZ 8 8 8
   void $ scene1 & add light1
@@ -55,6 +54,7 @@ main = run $ do
   material2 <- THREE.MeshLambertMaterial.new
   material2 & THREE.MeshLambertMaterial.map .= Just texture2
   geometry2 <- THREE.BoxGeometry.new (1, 1, 1)
+  -- geometry2 <- THREE.BoxGeometry.new ()
   mesh2 <- THREE.Mesh.new (geometry2, material2)
   (mesh2 ^. position) !.. setXYZ 1 0 0 
 
@@ -77,4 +77,29 @@ main = run $ do
 
   controls1 <- THREE.OrbitControls.new (camera1, canvas)
   void $ controls1 & update ()
+
+
+  -----------------------------------------------------------------------------
+  -- tests
+  -----------------------------------------------------------------------------
+
+  light1 & intensity *= 2
+  light1 & intensity %= (*0.5)
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light1 ^. position >>= vector3ToXYZ >>= consoleLog . show
+  light1 ^. isLight >>= consoleLog . show
+  camera1 ^. position >>= vector3ToXYZ >>= consoleLog . show
+  light1 ^. position !. z >>= valToNumber >>= consoleLog . show
+
+  light2 <- THREE.PointLight.new ()
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light2 ^. intensity >>= valToNumber >>= consoleLog . show
+  void $ light2 & copy (light1, True)
+  void $ light2 & copy light1
+  -- void $ light2 & copy mesh1  -- should not compile
+  light1 ^. intensity >>= valToNumber >>= consoleLog . show
+  light2 ^. intensity >>= valToNumber >>= consoleLog . show
+
+  pure ()
+
 
