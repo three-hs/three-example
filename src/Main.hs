@@ -24,6 +24,10 @@ import THREE.TextureLoader
 import THREE.Vector3
 import THREE.WebGLRenderer
 
+import THREE.CubeTexture
+import THREE.Texture hiding (rotation)
+import THREE.VideoTexture hiding (update)
+
 import FFI
 
 #ifdef WASM
@@ -66,6 +70,8 @@ main = run $ do
   renderer1 <- THREE.WebGLRenderer.new Nothing
   renderer1 & setSize (winWidthI, winHeightI, True)
 
+  material1 & onBeforeCompileMaterial (nullObject, renderer1) -- TODO remove
+
   renderer1 & setAnimationLoop (\_ _ [valTime] -> do
     time <- valToNumber valTime
     mesh2 & rotation !. y .= (time/1000)
@@ -82,6 +88,11 @@ main = run $ do
   -----------------------------------------------------------------------------
   -- tests
   -----------------------------------------------------------------------------
+
+  (Just t1 :: Maybe Texture) <- material2 ^. THREE.MeshLambertMaterial.map
+  -- (Just t2 :: Maybe CubeTexture) <- material2 ^. THREE.MeshLambertMaterial.map
+  -- (tJust 3 :: Maybe VideoTexture) <- material2 ^. THREE.MeshLambertMaterial.map
+  
 
   light1 & intensity *= 2
   light1 & intensity %= (*0.5)

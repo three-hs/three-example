@@ -3,6 +3,7 @@
 module FFI 
   ( appendInBody
   , consoleLog
+  , nullObject
   , valToNumber
   , winInnerWidth
   , winInnerHeight
