@@ -34,6 +34,15 @@ import FFI
 foreign export javascript "hs_start" main :: IO ()
 #endif
 
+test :: Three ()
+test = do
+  m1 <- THREE.MeshLambertMaterial.new
+  (Just t1 :: Maybe Texture) <- m1 ^. THREE.MeshLambertMaterial.map
+  (Just t2 :: Maybe CubeTexture) <- m1 ^. THREE.MeshLambertMaterial.map
+  (Just t3 :: Maybe VideoTexture) <- m1 ^. THREE.MeshLambertMaterial.map
+  pure ()
+  
+
 main :: IO ()
 main = run $ do
 
@@ -88,11 +97,6 @@ main = run $ do
   -----------------------------------------------------------------------------
   -- tests
   -----------------------------------------------------------------------------
-
-  (Just t1 :: Maybe Texture) <- material2 ^. THREE.MeshLambertMaterial.map
-  -- (Just t2 :: Maybe CubeTexture) <- material2 ^. THREE.MeshLambertMaterial.map
-  -- (tJust 3 :: Maybe VideoTexture) <- material2 ^. THREE.MeshLambertMaterial.map
-  
 
   light1 & intensity *= 2
   light1 & intensity %= (*0.5)
