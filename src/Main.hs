@@ -24,15 +24,42 @@ import THREE.TextureLoader
 import THREE.Vector3
 import THREE.WebGLRenderer
 
-import THREE.CubeTexture
 import THREE.Texture hiding (rotation)
-import THREE.VideoTexture hiding (update)
+import THREE.DepthTexture
 
 import FFI
 
 #ifdef WASM
 foreign export javascript "hs_start" main :: IO ()
 #endif
+
+
+-- MeshLambertMaterial
+-- map :: Property MeshLambertMaterial (Maybe Texture)
+-- map = optional "map"
+
+test :: Three ()
+test = do
+  texture1 <- unsafeCoerceTexture =<< THREE.DepthTexture.new (32::Int, 32::Int)
+  material1 <- THREE.MeshLambertMaterial.new
+  material1 & THREE.MeshLambertMaterial.map .= Just texture1
+
+  (Just t1 :: Maybe Texture) <- material1 ^. THREE.MeshLambertMaterial.map
+  -- (Just t2 :: Maybe DepthTexture) <- material1 ^. THREE.MeshLambertMaterial.map
+  -- (Just t3 :: Maybe VideoTexture) <- material1 ^. THREE.MeshLambertMaterial.map
+
+  mdt <- coerceDepthTexture t1
+  case mdt of
+    Just _ -> consoleLog "texture1 is a DepthTexture"
+    Nothing -> consoleLog "texture1 is not a DepthTexture"
+
+  mvt <- coerceVideoTexture t1
+  case mvt of
+    Just _ -> consoleLog "texture1 is a VideoTexture"
+    Nothing -> consoleLog "texture1 is not a VideoTexture"
+
+  pure ()
+  
 
 main :: IO ()
 main = run $ do
@@ -89,11 +116,6 @@ main = run $ do
   -- tests
   -----------------------------------------------------------------------------
 
-  (Just t1 :: Maybe Texture) <- material2 ^. THREE.MeshLambertMaterial.map
-  -- (Just t2 :: Maybe CubeTexture) <- material2 ^. THREE.MeshLambertMaterial.map
-  -- (tJust 3 :: Maybe VideoTexture) <- material2 ^. THREE.MeshLambertMaterial.map
-  
-
   light1 & intensity *= 2
   light1 & intensity %= (*0.5)
   light1 ^. intensity >>= valToNumber >>= consoleLog . show
@@ -110,6 +132,8 @@ main = run $ do
   -- void $ light2 & copy mesh1  -- should not compile
   light1 ^. intensity >>= valToNumber >>= consoleLog . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . show
+
+  test
 
   pure ()
 
