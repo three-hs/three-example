@@ -48,14 +48,17 @@ test = do
   -- (Just t2 :: Maybe DepthTexture) <- material1 ^. THREE.MeshLambertMaterial.map
   -- (Just t3 :: Maybe VideoTexture) <- material1 ^. THREE.MeshLambertMaterial.map
 
+  consoleLog . show =<< isDepthTexture t1   -- True 
+  consoleLog . show =<< isVideoTexture t1   -- False
+
   mdt <- coerceDepthTexture t1
   case mdt of
-    Just _ -> consoleLog "texture1 is a DepthTexture"
+    Just depthtexture1 -> consoleLog "texture1 is a DepthTexture"
     Nothing -> consoleLog "texture1 is not a DepthTexture"
 
   mvt <- coerceVideoTexture t1
   case mvt of
-    Just _ -> consoleLog "texture1 is a VideoTexture"
+    Just videotexture1 -> consoleLog "texture1 is a VideoTexture"
     Nothing -> consoleLog "texture1 is not a VideoTexture"
 
   pure ()

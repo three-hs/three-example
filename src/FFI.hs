@@ -13,6 +13,7 @@ module FFI
 
   , isTexture
   , isDepthTexture
+  , isVideoTexture
   , unsafeCoerceTexture
   , unsafeCoerceDepthTexture
   ) where
@@ -64,6 +65,9 @@ isTexture v = fromMaybe False <$> (fromJSVal =<< v ! "isTexture")
 
 isDepthTexture :: (MakeObject a) => a -> JSM Bool
 isDepthTexture v = fromMaybe False <$> (fromJSVal =<< v ! "isDepthTexture")
+
+isVideoTexture :: (MakeObject a) => a -> JSM Bool
+isVideoTexture v = fromMaybe False <$> (fromJSVal =<< v ! "isVideoTexture")
 
 unsafeCoerceTexture :: (ToJSVal a) => a -> JSM Texture
 unsafeCoerceTexture = fmap Texture . toJSVal 
