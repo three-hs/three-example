@@ -24,8 +24,7 @@ import THREE.TextureLoader
 import THREE.Vector3
 import THREE.WebGLRenderer
 
-import THREE.CubeTexture
-import THREE.Texture hiding (rotation)
+import THREE.DepthTexture
 import THREE.VideoTexture hiding (update)
 
 import FFI
@@ -34,12 +33,23 @@ import FFI
 foreign export javascript "hs_start" main :: IO ()
 #endif
 
+-- MeshLambertMaterial
+-- map :: (TextureClass texture, FromJSVal texture) => Property MeshLambertMaterial (Maybe texture)
+-- map = optional "map"
+
 test :: Three ()
 test = do
-  m1 <- THREE.MeshLambertMaterial.new
-  (Just t1 :: Maybe Texture) <- m1 ^. THREE.MeshLambertMaterial.map
-  (Just t2 :: Maybe CubeTexture) <- m1 ^. THREE.MeshLambertMaterial.map
-  (Just t3 :: Maybe VideoTexture) <- m1 ^. THREE.MeshLambertMaterial.map
+
+  texture1 <- THREE.DepthTexture.new (32::Int, 32::Int)
+  material1 <- THREE.MeshLambertMaterial.new
+  material1 & THREE.MeshLambertMaterial.map .= Just texture1
+
+  (Just t2 :: Maybe DepthTexture) <- material1 ^. THREE.MeshLambertMaterial.map -- this shouldn't compile
+  (Just t3 :: Maybe VideoTexture) <- material1 ^. THREE.MeshLambertMaterial.map -- this shouldn't compile
+
+  consoleLog . show =<< isDepthTexture t2   -- True (t2 is really a DepthTexture)
+  consoleLog . show =<< isVideoTexture t3   -- False (t3 is not really a VideoTexture)
+
   pure ()
   
 
@@ -114,6 +124,8 @@ main = run $ do
   -- void $ light2 & copy mesh1  -- should not compile
   light1 ^. intensity >>= valToNumber >>= consoleLog . show
   light2 ^. intensity >>= valToNumber >>= consoleLog . show
+
+  test
 
   pure ()
 
